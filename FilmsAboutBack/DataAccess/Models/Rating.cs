@@ -2,11 +2,8 @@
 {
     public class Rating
     {
-        /// <summary>
-        ///     Change fields
-        /// </summary>
-        public int UserId { get; set; }
-        public int FilmId { get; set; }
+        public User User { get; set; }
+        public Film Film { get; set; }
         public int Rate { get; set; }
     }
 }
