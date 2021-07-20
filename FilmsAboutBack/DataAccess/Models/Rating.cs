@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace FilmsAboutBack.Models
+﻿namespace FilmsAboutBack.Models
 {
     public class Rating
     {
+        /// <summary>
+        ///     Change fields
+        /// </summary>
         public int UserId { get; set; }
         public int FilmId { get; set; }
         public int Rate { get; set; }
