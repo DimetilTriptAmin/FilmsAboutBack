@@ -28,13 +28,16 @@ namespace FilmsAboutBack.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Ignore<IdentityUserLogin>();
+            modelBuilder.Ignore<IdentityUserRole>();
+            modelBuilder.Ignore<IdentityUserClaim>();
 
-            modelBuilder.Entity<IdentityUserLogin>()
-               .HasKey(u => u.UserId);
-            modelBuilder.Entity<IdentityUserRole>()
-                .HasKey(u => u.UserId);
-            modelBuilder.Entity<IdentityUserClaim>()
-                .HasKey(u => u.UserId);
+            //modelBuilder.Entity<IdentityUserLogin>()
+            //   .HasNoKey();
+            //modelBuilder.Entity<IdentityUserRole>()
+            //    .HasKey(u => u.UserId);
+            //modelBuilder.Entity<IdentityUserClaim>()
+            //    .HasKey(u => u.UserId);
 
 
             modelBuilder.Entity<User>()
