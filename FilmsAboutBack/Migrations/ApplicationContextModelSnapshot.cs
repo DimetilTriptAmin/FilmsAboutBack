@@ -65,6 +65,48 @@ namespace FilmsAboutBack.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Films");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "film #1",
+                            Poster = new byte[] { 0, 0 },
+                            Rating = 0,
+                            Title = "film1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "film #2",
+                            Poster = new byte[] { 0, 0 },
+                            Rating = 0,
+                            Title = "film2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "film #3",
+                            Poster = new byte[] { 0, 0 },
+                            Rating = 0,
+                            Title = "film3"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "film #4",
+                            Poster = new byte[] { 0, 0 },
+                            Rating = 0,
+                            Title = "film4"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "film #5",
+                            Poster = new byte[] { 0, 0 },
+                            Rating = 0,
+                            Title = "film5"
+                        });
                 });
 
             modelBuilder.Entity("FilmsAboutBack.Models.Rating", b =>
@@ -99,6 +141,9 @@ namespace FilmsAboutBack.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -108,8 +153,14 @@ namespace FilmsAboutBack.Migrations
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("LockoutEndDateUtc")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -133,7 +184,6 @@ namespace FilmsAboutBack.Migrations
 
                     b.ToTable("Users");
                 });
-
 
             modelBuilder.Entity("FilmsAboutBack.Models.Comment", b =>
                 {
@@ -164,7 +214,6 @@ namespace FilmsAboutBack.Migrations
 
                     b.Navigation("User");
                 });
-
 #pragma warning restore 612, 618
         }
     }

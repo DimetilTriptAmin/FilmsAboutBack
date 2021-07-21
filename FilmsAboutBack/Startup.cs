@@ -1,4 +1,8 @@
 using FilmsAboutBack.DataAccess;
+using FilmsAboutBack.DataAccess.Repositories.EFRepository;
+using FilmsAboutBack.DataAccess.Repositories.Interfaces;
+using FilmsAboutBack.Services;
+using FilmsAboutBack.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +35,11 @@ namespace FilmsAboutBack
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilmsAboutBack", Version = "v1" });
             });
+
+            services.AddTransient<DbContext, ApplicationContext>();
+            services.AddTransient<IFilmRepository, FilmRepository>();
+            services.AddTransient<IFilmService, FilmService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
