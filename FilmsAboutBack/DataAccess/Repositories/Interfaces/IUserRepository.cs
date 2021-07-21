@@ -5,6 +5,6 @@ namespace FilmsAboutBack.DataAccess.Repositories.Interfaces
 {
     public interface IUserRepository : ICRUDRepository<User>
     {
-        Task<User> GetById(int id);
+        Task<User> GetById(string id);
     }
 }
