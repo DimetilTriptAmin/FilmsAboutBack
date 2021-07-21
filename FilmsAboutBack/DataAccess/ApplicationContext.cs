@@ -1,8 +1,6 @@
 ﻿using FilmsAboutBack.Models;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.IO;
 
 namespace FilmsAboutBack.DataAccess
 {
@@ -19,20 +17,16 @@ namespace FilmsAboutBack.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Ignore<IdentityUserLogin>();
-            modelBuilder.Ignore<IdentityUserRole>();
-            modelBuilder.Ignore<IdentityUserClaim>();
-
-            //modelBuilder.Entity<IdentityUserLogin>()
-            //   .HasNoKey();
-            //modelBuilder.Entity<IdentityUserRole>()
-            //    .HasKey(u => u.UserId);
-            //modelBuilder.Entity<IdentityUserClaim>()
-            //    .HasKey(u => u.UserId);
-
-
-            modelBuilder.Entity<User>()
-                .HasKey(u => u.Id);
+            for (int i = 1; i < 6; i++)
+            {
+                modelBuilder.Entity<Film>().HasData(new Film
+                {
+                    Id = i,
+                    Title = "film" + i.ToString(),
+                    Description = "film #" + i.ToString(),
+                    Poster = new byte[2],
+                }) ;
+            }
 
             modelBuilder.Entity<Comment>()
                 .HasNoKey();
