@@ -8,6 +8,5 @@
         public string Description { get; set; }
         public string TrailerLink { get; set; }
         public int Rating { get; set; }
-
     }
 }
