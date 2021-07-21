@@ -21,12 +21,12 @@ namespace FilmsAboutBack.DataAccess.Repositories.EFRepository
 
         async public Task<User> Get(User item)
         {
-            return await _context.Set<User>().FindAsync(item.Id);
+            return await _context.Set<User>().FindAsync(item);
         }
 
         async public Task<User> GetById(string id)
         {
-            return await _context.Set<User>().FindAsync(id);
+            return await _context.Set<User>().FirstOrDefaultAsync(item => item.Id == id);
         }
 
         public void Remove(User item)

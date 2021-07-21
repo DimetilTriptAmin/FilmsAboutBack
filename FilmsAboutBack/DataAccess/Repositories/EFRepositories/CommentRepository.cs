@@ -23,7 +23,7 @@ namespace FilmsAboutBack.DataAccess.Repositories.EFRepository
 
         async public Task<Comment> Get(Comment item)
         {
-            return await _context.Set<Comment>().FindAsync(item.Film.Id);
+            return await _context.Set<Comment>().FindAsync(item);
         }
 
         public void Remove(Comment item)
