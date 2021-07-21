@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using FilmsAboutBack.Models;
 using System.Threading.Tasks;
 
 namespace FilmsAboutBack.DataAccess.Repositories.Interfaces
 {
-    interface Interface
+    public interface IRatingRepository : ICRUDRepository<Rating>
     {
+        Task<Rating> GetByPairId(int userId, int filmId);
     }
 }
