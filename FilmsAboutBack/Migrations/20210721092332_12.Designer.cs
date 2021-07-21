@@ -4,14 +4,16 @@ using FilmsAboutBack.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FilmsAboutBack.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210721092332_12")]
+    partial class _12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -134,7 +136,6 @@ namespace FilmsAboutBack.Migrations
                     b.ToTable("Users");
                 });
 
-
             modelBuilder.Entity("FilmsAboutBack.Models.Comment", b =>
                 {
                     b.HasOne("FilmsAboutBack.Models.Film", "Film")
@@ -164,7 +165,6 @@ namespace FilmsAboutBack.Migrations
 
                     b.Navigation("User");
                 });
-
 #pragma warning restore 612, 618
         }
     }
