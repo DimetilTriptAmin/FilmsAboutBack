@@ -1,9 +1,11 @@
 ﻿using FilmsAboutBack.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FilmsAboutBack.DataAccess.Repositories.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : ICRUDRepository<User>
     {
-        
+        Task<User> GetById(int id);
     }
 }
