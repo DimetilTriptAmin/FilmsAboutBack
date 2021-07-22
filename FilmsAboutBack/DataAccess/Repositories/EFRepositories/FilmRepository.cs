@@ -1,11 +1,10 @@
-﻿using FilmsAboutBack.DataAccess.Repositories.EFRepositories;
-using FilmsAboutBack.DataAccess.Repositories.Interfaces;
+﻿using FilmsAboutBack.DataAccess.Repositories.Interfaces;
 using FilmsAboutBack.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace FilmsAboutBack.DataAccess.Repositories.EFRepository
+namespace FilmsAboutBack.DataAccess.Repositories.EFRepositories
 {
     public class FilmRepository : CRUDRepository<Film>, IFilmRepository
     {
