@@ -8,6 +8,6 @@ namespace FilmsAboutBack.Services.Interfaces
 {
     public interface IFilmService
     {
-        Task<IEnumerable<Film>> GetAll();
+        Task<IEnumerable<Film>> GetAllAsync();
     }
 }

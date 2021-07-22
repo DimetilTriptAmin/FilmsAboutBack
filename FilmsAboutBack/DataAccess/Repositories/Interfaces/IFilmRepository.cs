@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.DataAccess.Repositories.Interfaces
 {
-    public interface IFilmRepository : ICRUDRepository<Film>
+    public interface IFilmRepository
     {
-        Task<IEnumerable<Film>> GetAll();
-        Task<Film> GetById(int id);
+        Task<IEnumerable<Film>> GetAllAsync();
     }
 }

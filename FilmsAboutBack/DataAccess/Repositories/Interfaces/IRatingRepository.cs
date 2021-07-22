@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.DataAccess.Repositories.Interfaces
 {
-    public interface IRatingRepository : ICRUDRepository<Rating>
+    public interface IRatingRepository
     {
-        Task<Rating> GetByPairId(string userId, int filmId);
+        Task<Rating> GetByPairIdAsync(int userId, int filmId);
     }
 }

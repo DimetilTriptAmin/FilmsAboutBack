@@ -18,9 +18,9 @@ namespace FilmsAboutBack.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Film>> GetAll()
+        public async Task<IEnumerable<Film>> GetAllAsync()
         {
-            return await _filmService.GetAll();
+            return await _filmService.GetAllAsync();
         }
     }
 }

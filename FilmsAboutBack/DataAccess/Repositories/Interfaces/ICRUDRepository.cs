@@ -4,9 +4,9 @@ namespace FilmsAboutBack.DataAccess.Repositories.Interfaces
 {
     public interface ICRUDRepository<TEntity>
     {
-        Task<TEntity> Get(TEntity item);
-        void Create(TEntity item);
-        void Update(TEntity item);
-        void Remove(TEntity item);
+        Task<TEntity> GetAsync(int id);
+        Task<TEntity> CreateAsync(TEntity item);
+        Task<TEntity> UpdateAsync(TEntity item);
+        Task<TEntity> RemoveAsync(TEntity item);
     }
 }
