@@ -230,7 +230,7 @@ _pkginfo.txt
 !?*.[Cc]ache/
 
 # Others
-Migrations/
+FilmsAboutBack/Migrations/
 ClientBin/
 ~$*
 *~
