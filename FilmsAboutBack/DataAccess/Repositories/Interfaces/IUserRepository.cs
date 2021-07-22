@@ -1,10 +1,6 @@
-﻿using FilmsAboutBack.Models;
-using System.Threading.Tasks;
-
-namespace FilmsAboutBack.DataAccess.Repositories.Interfaces
+﻿namespace FilmsAboutBack.DataAccess.Repositories.Interfaces
 {
-    public interface IUserRepository : ICRUDRepository<User>
+    public interface IUserRepository
     {
-        Task<User> GetById(string id);
     }
 }

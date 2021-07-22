@@ -15,9 +15,9 @@ namespace FilmsAboutBack.Services
             _filmRepository = filmRepository;
         }
 
-        async public Task<IEnumerable<Film>> GetAll()
+        async public Task<IEnumerable<Film>> GetAllAsync()
         {
-            return await _filmRepository.GetAll();
+            return await _filmRepository.GetAllAsync();
         }
     }
 }

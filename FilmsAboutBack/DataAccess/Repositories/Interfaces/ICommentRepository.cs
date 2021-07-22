@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.DataAccess.Repositories.Interfaces
 {
-    public interface ICommentRepository : ICRUDRepository<Comment>
+    public interface ICommentRepository
     {
-        Task<IEnumerable<Comment>> GetAllByFilmId(int id);
+        Task<IEnumerable<Comment>> GetAllByFilmIdAsync(int id);
     }
 }
