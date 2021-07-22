@@ -1,6 +1,6 @@
 using FilmsAboutBack.DataAccess;
-using FilmsAboutBack.DataAccess.Repositories.EFRepository;
-using FilmsAboutBack.DataAccess.Repositories.Interfaces;
+using FilmsAboutBack.DataAccess.UnitOfWork;
+using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
 using FilmsAboutBack.Services;
 using FilmsAboutBack.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -37,7 +37,7 @@ namespace FilmsAboutBack
             });
 
             services.AddTransient<DbContext, ApplicationContext>();
-            services.AddTransient<IFilmRepository, FilmRepository>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IFilmService, FilmService>();
 
         }

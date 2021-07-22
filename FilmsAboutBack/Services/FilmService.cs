@@ -1,4 +1,5 @@
 ﻿using FilmsAboutBack.DataAccess.Repositories.Interfaces;
+using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
 using FilmsAboutBack.Models;
 using FilmsAboutBack.Services.Interfaces;
 using System.Collections.Generic;
@@ -8,16 +9,16 @@ namespace FilmsAboutBack.Services
 {
     public class FilmService : CRUDService<IFilmRepository, Film>, IFilmService
     {
-        private IFilmRepository _filmRepository;
+        private IUnitOfWork _unitOfWork;
 
-        public FilmService(IFilmRepository filmRepository) : base(filmRepository)
+        public FilmService(IUnitOfWork unitOfWork) : base(unitOfWork.FilmRepository)
         {
-            _filmRepository = filmRepository;
+            _unitOfWork = unitOfWork;
         }
 
         async public Task<IEnumerable<Film>> GetAllAsync()
         {
-            return await _filmRepository.GetAllAsync();
+            return await _unitOfWork.FilmRepository.GetAllAsync();
         }
     }
 }
