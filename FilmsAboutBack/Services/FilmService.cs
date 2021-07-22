@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services
 {
-    public class FilmService : IFilmService
+    public class FilmService : CRUDService<IFilmRepository, Film>, IFilmService
     {
         private IFilmRepository _filmRepository;
 
-        public FilmService(IFilmRepository filmRepository)
+        public FilmService(IFilmRepository filmRepository) : base(filmRepository)
         {
             _filmRepository = filmRepository;
         }
@@ -18,11 +18,6 @@ namespace FilmsAboutBack.Services
         async public Task<IEnumerable<Film>> GetAllAsync()
         {
             return await _filmRepository.GetAllAsync();
-        }
-
-        async public Task<Film> GetAsync(int id)
-        {
-            return await _filmRepository.GetAsync(id);
         }
     }
 }
