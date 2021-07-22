@@ -22,5 +22,11 @@ namespace FilmsAboutBack.Controllers
         {
             return await _filmService.GetAllAsync();
         }
+
+        [HttpGet("/{id}")]
+        public async Task<Film> GetAsync(int id)
+        {
+            return await _filmService.GetAsync(id);
+        }
     }
 }

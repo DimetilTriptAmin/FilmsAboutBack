@@ -9,5 +9,6 @@ namespace FilmsAboutBack.Services.Interfaces
     public interface IFilmService
     {
         Task<IEnumerable<Film>> GetAllAsync();
+        Task<Film> GetAsync(int id);
     }
 }

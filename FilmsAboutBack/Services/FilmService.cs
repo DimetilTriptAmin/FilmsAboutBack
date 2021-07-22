@@ -19,5 +19,10 @@ namespace FilmsAboutBack.Services
         {
             return await _filmRepository.GetAllAsync();
         }
+
+        async public Task<Film> GetAsync(int id)
+        {
+            return await _filmRepository.GetAsync(id);
+        }
     }
 }
