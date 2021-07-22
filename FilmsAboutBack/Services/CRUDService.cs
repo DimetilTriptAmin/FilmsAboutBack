@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services
 {
-    public class CRUDService<TRepository, TEntity> : ICRUDService<TEntity>
+    public class CRUDService<TEntity> : ICRUDService<TEntity>
     {
         private ICRUDRepository<TEntity> _repository;
 
@@ -14,24 +14,12 @@ namespace FilmsAboutBack.Services
             _repository = repository;
         }
 
-        public Task<TEntity> CreateAsync(TEntity item)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<TEntity> CreateAsync(TEntity item) => await _repository.CreateAsync(item);
 
-        async public Task<TEntity> GetAsync(int id)
-        {
-            return await _repository.GetAsync(id);
-        }
+        public async Task<TEntity> GetAsync(int id) => await _repository.GetAsync(id);
 
-        public Task<TEntity> RemoveAsync(TEntity item)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<TEntity> RemoveAsync(TEntity item) => await _repository.RemoveAsync(item);
 
-        public Task<TEntity> UpdateAsync(TEntity item)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<TEntity> UpdateAsync(TEntity item) => await _repository.UpdateAsync(item);
     }
 }

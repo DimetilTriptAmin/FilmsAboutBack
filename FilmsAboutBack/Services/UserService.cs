@@ -7,15 +7,13 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services
 {
-    public class FilmService : CRUDService<Film>, IFilmService
+    public class UserService : CRUDService<User>, IUserService
     {
         private IUnitOfWork _unitOfWork;
 
-        public FilmService(IUnitOfWork unitOfWork) : base(unitOfWork.FilmRepository)
+        public UserService(IUnitOfWork unitOfWork) : base(unitOfWork.UserRepository)
         {
             _unitOfWork = unitOfWork;
         }
-
-        public async Task<IEnumerable<Film>> GetAllAsync() => await _unitOfWork.FilmRepository.GetAllAsync();
     }
 }
