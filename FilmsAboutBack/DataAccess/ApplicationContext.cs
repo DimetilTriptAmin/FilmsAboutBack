@@ -28,6 +28,15 @@ namespace FilmsAboutBack.DataAccess
                 }) ;
             }
 
+            modelBuilder.Entity<IdentityUserLogin<int>>()
+                .HasKey(u => u.UserId);
+
+            modelBuilder.Entity<IdentityUserRole<int>>()
+                .HasKey(r => r.RoleId);
+
+            modelBuilder.Entity<IdentityUserToken<int>>()
+                .HasKey(t => t.UserId);
+
             modelBuilder.Entity<Comment>()
                 .HasNoKey();
 
