@@ -11,7 +11,7 @@ namespace FilmsAboutBack.Services
     {
         private IUnitOfWork _unitOfWork;
 
-        public UserService(IUnitOfWork unitOfWork) : base(unitOfWork.UserRepository)
+        public UserService(IUnitOfWork unitOfWork) : base(unitOfWork, unitOfWork.UserRepository)
         {
             _unitOfWork = unitOfWork;
         }

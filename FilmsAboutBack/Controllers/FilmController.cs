@@ -23,16 +23,16 @@ namespace FilmsAboutBack.Controllers
             return await _filmService.GetAllAsync();
         }
 
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<Film> GetAsync(int id)
         {
             return await _filmService.GetAsync(id);
         }
 
-        [HttpPost("add")]
-        public async Task<Film> CreateAsync(int id)
+        [HttpGet("remove{id}")]
+        public async Task RemoveAsync(int id)
         {
-            return await _filmService.GetAsync(id);
+            await _filmService.RemoveAsync(id);
         }
     }
 }
