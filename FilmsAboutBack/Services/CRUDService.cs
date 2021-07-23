@@ -1,7 +1,6 @@
 ﻿using FilmsAboutBack.DataAccess.Repositories.Interfaces;
 using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
 using FilmsAboutBack.Services.Interfaces;
-using System;
 using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services
@@ -9,7 +8,7 @@ namespace FilmsAboutBack.Services
     public class CRUDService<TEntity> : ICRUDService<TEntity>
     {
 
-        private IUnitOfWork _unitOfWork;
+        protected IUnitOfWork _unitOfWork;
         private ICRUDRepository<TEntity> _repository;
 
         public CRUDService(IUnitOfWork unitOfWork, ICRUDRepository<TEntity> repository)

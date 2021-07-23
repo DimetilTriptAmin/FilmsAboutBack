@@ -34,5 +34,17 @@ namespace FilmsAboutBack.Controllers
         {
             await _filmService.RemoveAsync(id);
         }
+
+        [HttpPost("add")]
+        public async Task CreateAsync(Film film)
+        {
+            await _filmService.CreateAsync(film);
+        }
+
+        [HttpPut("update")]
+        public async Task UpdateAsync(Film film)
+        {
+            await _filmService.UpdateAsync(film);
+        }
     }
 }
