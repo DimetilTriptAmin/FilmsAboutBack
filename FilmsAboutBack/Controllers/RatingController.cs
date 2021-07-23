@@ -17,8 +17,8 @@ namespace FilmsAboutBack.Controllers
             _ratingService = ratingService;
         }
 
-        [HttpGet("getByPair{userId, filmId}")]
-        public async Task<Rating> GetByPairIdAsync(int filmId, int userId)
+        [HttpGet("getByPair")]
+        public async Task<int> GetByPairIdAsync(int filmId, int userId)
         {
             return await _ratingService.GetByPairIdAsync(userId, filmId);
         }

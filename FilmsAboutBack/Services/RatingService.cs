@@ -13,7 +13,7 @@ namespace FilmsAboutBack.Services
         {
         }
 
-        public async Task<Rating> GetByPairIdAsync(int userId, int filmId)
+        public async Task<int> GetByPairIdAsync(int userId, int filmId)
         {
             return await _unitOfWork.RatingRepository.GetByPairIdAsync(userId, filmId);
         }

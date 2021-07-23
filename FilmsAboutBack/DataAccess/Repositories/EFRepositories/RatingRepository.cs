@@ -13,9 +13,10 @@ namespace FilmsAboutBack.DataAccess.Repositories.EFRepositories
         {
         }
 
-        async public Task<Rating> GetByPairIdAsync(int userId, int filmId)
+        async public Task<int> GetByPairIdAsync(int userId, int filmId)
         {
-            return await _context.Set<Rating>().FirstOrDefaultAsync(r => r.Film.Id == filmId && r.User.Id == userId);
+            return await Task.Run(() => _context.Set<Rating>().
+                FirstOrDefaultAsync(r => r.Film.Id == filmId && r.User.Id == userId).Result.Rate);
         }
 
         async public Task<IEnumerable<int>> GetAllRatesByIdAsync(int filmId)
