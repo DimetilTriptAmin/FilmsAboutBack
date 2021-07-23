@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace FilmsAboutBack.DataAccess.Repositories.EFRepositories
 {
+    //TODO: add try/catch
     public class CRUDRepository<TEntity> : ICRUDRepository<TEntity> where TEntity : class
     {
         protected DbContext _context;

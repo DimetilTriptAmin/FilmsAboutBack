@@ -11,7 +11,7 @@ namespace FilmsAboutBack.Services
     {
         private IUnitOfWork _unitOfWork;
 
-        public RatingService(IUnitOfWork unitOfWork) : base(unitOfWork.RatingRepository)
+        public RatingService(IUnitOfWork unitOfWork) : base(unitOfWork, unitOfWork.RatingRepository)
         {
             _unitOfWork = unitOfWork;
         }

@@ -11,7 +11,7 @@ namespace FilmsAboutBack.Services
     {
         private IUnitOfWork _unitOfWork;
 
-        public CommentService(IUnitOfWork unitOfWork) : base(unitOfWork.CommentRepository)
+        public CommentService(IUnitOfWork unitOfWork) : base(unitOfWork, unitOfWork.CommentRepository)
         {
             _unitOfWork = unitOfWork;
         }
