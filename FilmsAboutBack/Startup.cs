@@ -39,6 +39,9 @@ namespace FilmsAboutBack
             services.AddTransient<DbContext, ApplicationContext>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IFilmService, FilmService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<IRatingService, RatingService>();
 
         }
 
