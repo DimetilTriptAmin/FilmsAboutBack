@@ -1,7 +1,6 @@
 ﻿using FilmsAboutBack.DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace FilmsAboutBack.DataAccess.Repositories.EFRepositories
 {

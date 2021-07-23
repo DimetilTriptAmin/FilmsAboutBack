@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FilmsAboutBack.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class FilmController : ControllerBase
     {
         private IFilmService _filmService;
@@ -33,6 +33,18 @@ namespace FilmsAboutBack.Controllers
         public async Task RemoveAsync(int id)
         {
             await _filmService.RemoveAsync(id);
+        }
+
+        [HttpPost("add")]
+        public async Task CreateAsync(Film film)
+        {
+            await _filmService.CreateAsync(film);
+        }
+
+        [HttpPut("update")]
+        public async Task UpdateAsync(Film film)
+        {
+            await _filmService.UpdateAsync(film);
         }
     }
 }
