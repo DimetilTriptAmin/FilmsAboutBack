@@ -11,6 +11,6 @@ namespace FilmsAboutBack.Services.Interfaces
         Task<TEntity> GetAsync(int id);
         Task<TEntity> CreateAsync(TEntity item);
         Task<TEntity> UpdateAsync(TEntity item);
-        Task<TEntity> RemoveAsync(TEntity item);
+        Task<TEntity> RemoveAsync(int id);
     }
 }

@@ -18,7 +18,7 @@ namespace FilmsAboutBack.Services
 
         public async Task<TEntity> GetAsync(int id) => await _repository.GetAsync(id);
 
-        public async Task<TEntity> RemoveAsync(TEntity item) => await _repository.RemoveAsync(item);
+        public async Task<TEntity> RemoveAsync(int id) => await _repository.RemoveAsync(id);
 
         public async Task<TEntity> UpdateAsync(TEntity item) => await _repository.UpdateAsync(item);
     }
