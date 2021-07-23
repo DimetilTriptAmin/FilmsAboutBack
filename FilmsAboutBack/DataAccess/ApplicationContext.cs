@@ -28,6 +28,21 @@ namespace FilmsAboutBack.DataAccess
                 }) ;
             }
 
+            for (int i = 1; i < 6; i++)
+            {
+                modelBuilder.Entity<User>().HasData(new User
+                {
+                    Id = i,
+                    BirthDate = new System.DateTime().Date,
+                    LockoutEnabled = false,
+                    TwoFactorEnabled = false,
+                    EmailConfirmed = false,
+                    PhoneNumberConfirmed = false,
+                    AccessFailedCount = 0,
+                }) ;
+                
+            }
+
             modelBuilder.Entity<IdentityUserLogin<int>>()
                 .HasKey(u => u.UserId);
 
@@ -37,11 +52,8 @@ namespace FilmsAboutBack.DataAccess
             modelBuilder.Entity<IdentityUserToken<int>>()
                 .HasKey(t => t.UserId);
 
-            modelBuilder.Entity<Comment>()
-                .HasNoKey();
-
             modelBuilder.Entity<Rating>()
-                .HasNoKey();
+                .HasKey(c => new { c.UserId, c.FilmId });
         }
 
     }

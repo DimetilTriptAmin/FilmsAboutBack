@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FilmsAboutBack.Migrations
 {
-    public partial class test : Migration
+    public partial class modelfix : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -144,6 +144,8 @@ namespace FilmsAboutBack.Migrations
                 name: "Comments",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: true),
                     FilmId = table.Column<int>(type: "int", nullable: true),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -151,6 +153,7 @@ namespace FilmsAboutBack.Migrations
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Comments_Films_FilmId",
                         column: x => x.FilmId,
@@ -169,24 +172,25 @@ namespace FilmsAboutBack.Migrations
                 name: "Ratings",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: true),
-                    FilmId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    FilmId = table.Column<int>(type: "int", nullable: false),
                     Rate = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_Ratings", x => new { x.UserId, x.FilmId });
                     table.ForeignKey(
                         name: "FK_Ratings_Films_FilmId",
                         column: x => x.FilmId,
                         principalTable: "Films",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Ratings_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -199,6 +203,18 @@ namespace FilmsAboutBack.Migrations
                     { 3, "film #3", new byte[] { 0, 0 }, 0, "film3", null },
                     { 4, "film #4", new byte[] { 0, 0 }, 0, "film4", null },
                     { 5, "film #5", new byte[] { 0, 0 }, 0, "film5", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "AccessFailedCount", "Avatar", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { 1, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "1720f380-8e03-4ba3-bed6-623c068afa73", null, false, false, null, null, null, null, null, false, null, false, null },
+                    { 2, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "1699dcd0-e925-431b-9aec-803cf76f727b", null, false, false, null, null, null, null, null, false, null, false, null },
+                    { 3, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "8470bf1f-a7c7-46c9-be9c-9f760041e172", null, false, false, null, null, null, null, null, false, null, false, null },
+                    { 4, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "54ed9396-1a37-4246-89ae-0cfb0991a411", null, false, false, null, null, null, null, null, false, null, false, null },
+                    { 5, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "2fc41663-4adf-489f-b4d0-7e5a6150aa75", null, false, false, null, null, null, null, null, false, null, false, null }
                 });
 
             migrationBuilder.CreateIndex(
@@ -215,11 +231,6 @@ namespace FilmsAboutBack.Migrations
                 name: "IX_Ratings_FilmId",
                 table: "Ratings",
                 column: "FilmId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ratings_UserId",
-                table: "Ratings",
-                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
