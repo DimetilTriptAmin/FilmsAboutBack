@@ -9,8 +9,8 @@ namespace FilmsAboutBack.Services.Interfaces
     public interface ICRUDService<TEntity>
     {
         Task<TEntity> GetAsync(int id);
-        Task<TEntity> CreateAsync(TEntity item);
-        Task<TEntity> UpdateAsync(TEntity item);
-        Task<TEntity> RemoveAsync(TEntity item);
+        Task CreateAsync(TEntity item);
+        Task UpdateAsync(TEntity item);
+        Task RemoveAsync(TEntity item);
     }
 }

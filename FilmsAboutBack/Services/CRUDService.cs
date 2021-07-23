@@ -1,4 +1,5 @@
 ﻿using FilmsAboutBack.DataAccess.Repositories.Interfaces;
+using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
 using FilmsAboutBack.Services.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -7,19 +8,34 @@ namespace FilmsAboutBack.Services
 {
     public class CRUDService<TEntity> : ICRUDService<TEntity>
     {
+
+        private IUnitOfWork _unitOfWork;
         private ICRUDRepository<TEntity> _repository;
 
-        public CRUDService(ICRUDRepository<TEntity> repository)
+        public CRUDService(IUnitOfWork unitOfWork, ICRUDRepository<TEntity> repository)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
         }
-
-        public async Task<TEntity> CreateAsync(TEntity item) => await _repository.CreateAsync(item);
 
         public async Task<TEntity> GetAsync(int id) => await _repository.GetAsync(id);
 
-        public async Task<TEntity> RemoveAsync(TEntity item) => await _repository.RemoveAsync(item);
+        public async Task CreateAsync(TEntity item)
+        {
+            await _repository.CreateAsync(item);
+            await _unitOfWork.SaveAsync();
+        }
 
-        public async Task<TEntity> UpdateAsync(TEntity item) => await _repository.UpdateAsync(item);
+        public async Task RemoveAsync(TEntity item)
+        {
+            await _repository.RemoveAsync(item);
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task UpdateAsync(TEntity item)
+        {
+            await _repository.UpdateAsync(item);
+            await _unitOfWork.SaveAsync();
+        }
     }
 }
