@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FilmsAboutBack.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class FilmController : ControllerBase
     {
         private IFilmService _filmService;
@@ -25,6 +25,12 @@ namespace FilmsAboutBack.Controllers
 
         [HttpGet("/{id}")]
         public async Task<Film> GetAsync(int id)
+        {
+            return await _filmService.GetAsync(id);
+        }
+
+        [HttpPost("add")]
+        public async Task<Film> CreateAsync(int id)
         {
             return await _filmService.GetAsync(id);
         }
