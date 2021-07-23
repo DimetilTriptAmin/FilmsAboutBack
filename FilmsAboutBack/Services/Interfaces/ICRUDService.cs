@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services.Interfaces
 {
-    // TODO add saveChanges method
     public interface ICRUDService<TEntity>
     {
         Task<TEntity> GetAsync(int id);
         Task CreateAsync(TEntity item);
         Task UpdateAsync(TEntity item);
-        Task RemoveAsync(TEntity item);
+        Task RemoveAsync(int id);
     }
 }

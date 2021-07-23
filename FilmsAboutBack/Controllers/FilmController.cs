@@ -32,7 +32,7 @@ namespace FilmsAboutBack.Controllers
         [HttpGet("remove{id}")]
         public async Task RemoveAsync(int id)
         {
-            return await _filmService.RemoveAsync(id);
+            await _filmService.RemoveAsync(id);
         }
     }
 }

@@ -26,9 +26,9 @@ namespace FilmsAboutBack.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task RemoveAsync(TEntity item)
+        public async Task RemoveAsync(int id)
         {
-            await _repository.RemoveAsync(item);
+            await _repository.RemoveAsync(id);
             await _unitOfWork.SaveAsync();
         }
 
