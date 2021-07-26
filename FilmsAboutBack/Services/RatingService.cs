@@ -18,10 +18,10 @@ namespace FilmsAboutBack.Services
             return await _unitOfWork.RatingRepository.GetByPairIdAsync(userId, filmId);
         }
 
-        public async Task<float> GetRatingByIdAsync(int filmId)
+        public async Task<double> GetRatingByIdAsync(int filmId)
         {
-            var rates = _unitOfWork.RatingRepository.GetAllRatesByIdAsync(filmId).Result.ToList();
-            return await Task.Run(() => rates.Aggregate(0, (acc, value) => acc + value) / (float)rates.Count);
+            var rates = _unitOfWork.RatingRepository.GetAllRatesByIdAsync(filmId).Result;
+            return await Task.Run(() => rates.Average<int>(value => value));
         }
     }
 }

@@ -24,7 +24,7 @@ namespace FilmsAboutBack.Controllers
         }
 
         [HttpGet("forFilm{filmId}")]
-        public async Task<float> GetRatingByFilmId(int filmId)
+        public async Task<double> GetRatingByFilmId(int filmId)
         {
             return await _ratingService.GetRatingByIdAsync(filmId);
         }
