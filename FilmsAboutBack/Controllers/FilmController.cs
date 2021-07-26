@@ -8,11 +8,11 @@ namespace FilmsAboutBack.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class FilmController : ControllerBase
+    public class FilmController : CRUDController<Film>
     {
         private IFilmService _filmService;
 
-        public FilmController(IFilmService filmService)
+        public FilmController(IFilmService filmService) : base(filmService)
         {
             _filmService = filmService;
         }
@@ -23,28 +23,5 @@ namespace FilmsAboutBack.Controllers
             return await _filmService.GetAllAsync();
         }
 
-        [HttpGet("{id}")]
-        public async Task<Film> GetAsync(int id)
-        {
-            return await _filmService.GetAsync(id);
-        }
-
-        [HttpGet("remove{id}")]
-        public async Task RemoveAsync(int id)
-        {
-            await _filmService.RemoveAsync(id);
-        }
-
-        [HttpPost("add")]
-        public async Task CreateAsync(Film film)
-        {
-            await _filmService.CreateAsync(film);
-        }
-
-        [HttpPut("update")]
-        public async Task UpdateAsync(Film film)
-        {
-            await _filmService.UpdateAsync(film);
-        }
     }
 }
