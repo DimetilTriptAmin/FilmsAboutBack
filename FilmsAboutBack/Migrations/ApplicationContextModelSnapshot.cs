@@ -60,8 +60,8 @@ namespace FilmsAboutBack.Migrations
                     b.Property<byte[]>("Poster")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
@@ -79,7 +79,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 1,
                             Description = "film #1",
                             Poster = new byte[] { 0, 0 },
-                            Rating = 0,
+                            Rating = 0.0,
                             Title = "film1"
                         },
                         new
@@ -87,7 +87,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 2,
                             Description = "film #2",
                             Poster = new byte[] { 0, 0 },
-                            Rating = 0,
+                            Rating = 0.0,
                             Title = "film2"
                         },
                         new
@@ -95,7 +95,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 3,
                             Description = "film #3",
                             Poster = new byte[] { 0, 0 },
-                            Rating = 0,
+                            Rating = 0.0,
                             Title = "film3"
                         },
                         new
@@ -103,7 +103,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 4,
                             Description = "film #4",
                             Poster = new byte[] { 0, 0 },
-                            Rating = 0,
+                            Rating = 0.0,
                             Title = "film4"
                         },
                         new
@@ -111,7 +111,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 5,
                             Description = "film #5",
                             Poster = new byte[] { 0, 0 },
-                            Rating = 0,
+                            Rating = 0.0,
                             Title = "film5"
                         });
                 });
@@ -199,7 +199,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "1720f380-8e03-4ba3-bed6-623c068afa73",
+                            ConcurrencyStamp = "4c8f11b1-e671-4836-a720-ce17d4c424c0",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -210,7 +210,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "1699dcd0-e925-431b-9aec-803cf76f727b",
+                            ConcurrencyStamp = "101744a1-ca6e-492a-b4c1-dd563e37b28b",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -221,7 +221,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "8470bf1f-a7c7-46c9-be9c-9f760041e172",
+                            ConcurrencyStamp = "1e1e4788-e877-48c0-8415-42d65aca4def",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -232,7 +232,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "54ed9396-1a37-4246-89ae-0cfb0991a411",
+                            ConcurrencyStamp = "249727c0-2308-4eef-b104-f51cc1cbd31a",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -243,7 +243,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 5,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "2fc41663-4adf-489f-b4d0-7e5a6150aa75",
+                            ConcurrencyStamp = "1ab4e5dc-7119-4b62-9fa7-00cd2ed03225",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,

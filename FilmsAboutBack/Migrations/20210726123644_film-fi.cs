@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FilmsAboutBack.Migrations
 {
-    public partial class modelfix : Migration
+    public partial class filmfi : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,7 +17,7 @@ namespace FilmsAboutBack.Migrations
                     Poster = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TrailerLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Rating = table.Column<int>(type: "int", nullable: false)
+                    Rating = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -198,11 +198,11 @@ namespace FilmsAboutBack.Migrations
                 columns: new[] { "Id", "Description", "Poster", "Rating", "Title", "TrailerLink" },
                 values: new object[,]
                 {
-                    { 1, "film #1", new byte[] { 0, 0 }, 0, "film1", null },
-                    { 2, "film #2", new byte[] { 0, 0 }, 0, "film2", null },
-                    { 3, "film #3", new byte[] { 0, 0 }, 0, "film3", null },
-                    { 4, "film #4", new byte[] { 0, 0 }, 0, "film4", null },
-                    { 5, "film #5", new byte[] { 0, 0 }, 0, "film5", null }
+                    { 1, "film #1", new byte[] { 0, 0 }, 0.0, "film1", null },
+                    { 2, "film #2", new byte[] { 0, 0 }, 0.0, "film2", null },
+                    { 3, "film #3", new byte[] { 0, 0 }, 0.0, "film3", null },
+                    { 4, "film #4", new byte[] { 0, 0 }, 0.0, "film4", null },
+                    { 5, "film #5", new byte[] { 0, 0 }, 0.0, "film5", null }
                 });
 
             migrationBuilder.InsertData(
@@ -210,11 +210,11 @@ namespace FilmsAboutBack.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "Avatar", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "1720f380-8e03-4ba3-bed6-623c068afa73", null, false, false, null, null, null, null, null, false, null, false, null },
-                    { 2, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "1699dcd0-e925-431b-9aec-803cf76f727b", null, false, false, null, null, null, null, null, false, null, false, null },
-                    { 3, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "8470bf1f-a7c7-46c9-be9c-9f760041e172", null, false, false, null, null, null, null, null, false, null, false, null },
-                    { 4, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "54ed9396-1a37-4246-89ae-0cfb0991a411", null, false, false, null, null, null, null, null, false, null, false, null },
-                    { 5, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "2fc41663-4adf-489f-b4d0-7e5a6150aa75", null, false, false, null, null, null, null, null, false, null, false, null }
+                    { 1, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "4c8f11b1-e671-4836-a720-ce17d4c424c0", null, false, false, null, null, null, null, null, false, null, false, null },
+                    { 2, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "101744a1-ca6e-492a-b4c1-dd563e37b28b", null, false, false, null, null, null, null, null, false, null, false, null },
+                    { 3, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "1e1e4788-e877-48c0-8415-42d65aca4def", null, false, false, null, null, null, null, null, false, null, false, null },
+                    { 4, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "249727c0-2308-4eef-b104-f51cc1cbd31a", null, false, false, null, null, null, null, null, false, null, false, null },
+                    { 5, 0, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "1ab4e5dc-7119-4b62-9fa7-00cd2ed03225", null, false, false, null, null, null, null, null, false, null, false, null }
                 });
 
             migrationBuilder.CreateIndex(
