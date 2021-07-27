@@ -4,14 +4,16 @@ using FilmsAboutBack.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FilmsAboutBack.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210726133922_added-trailer-link")]
+    partial class addedtrailerlink
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,7 +28,7 @@ namespace FilmsAboutBack.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("FilmId")
+                    b.Property<int?>("FilmId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("PublishDate")
@@ -35,7 +37,7 @@ namespace FilmsAboutBack.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -45,32 +47,6 @@ namespace FilmsAboutBack.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            FilmId = 3,
-                            PublishDate = new DateTime(2021, 7, 27, 12, 53, 4, 56, DateTimeKind.Local).AddTicks(3588),
-                            Text = "Wonderful movie! Definitely 5 stars!",
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            FilmId = 3,
-                            PublishDate = new DateTime(2021, 7, 27, 12, 53, 4, 57, DateTimeKind.Local).AddTicks(692),
-                            Text = "Shittiest shit ever! Don't waste your time!",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            FilmId = 3,
-                            PublishDate = new DateTime(2021, 7, 27, 12, 53, 4, 57, DateTimeKind.Local).AddTicks(723),
-                            Text = "Should I watch it or not?",
-                            UserId = 3
-                        });
                 });
 
             modelBuilder.Entity("FilmsAboutBack.Models.Film", b =>
@@ -230,7 +206,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "89bae6c5-f43e-423c-9fbd-f6b5349907c7",
+                            ConcurrencyStamp = "119116a6-6652-4c9f-a5db-a4e4f87b1d3d",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -241,7 +217,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "08c96d91-a8fe-4a41-9275-74415e00f7bc",
+                            ConcurrencyStamp = "b425ab02-8256-4d71-bbe6-4e248de3f9ac",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -252,7 +228,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "4ab6210a-7990-4b31-92cf-cbc73ef4f54b",
+                            ConcurrencyStamp = "a1ceaf29-f557-47c0-90f9-27c43241ca45",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -263,7 +239,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "993d4153-e107-4e34-9594-d57b31403e87",
+                            ConcurrencyStamp = "83555f52-741c-432e-9569-380cec3d730d",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -274,7 +250,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 5,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "5c9225e8-941a-4c38-bef1-bd8b06b14a43",
+                            ConcurrencyStamp = "79cc7ee2-5a8c-4f46-a363-4748350df768",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -406,15 +382,11 @@ namespace FilmsAboutBack.Migrations
                 {
                     b.HasOne("FilmsAboutBack.Models.Film", "Film")
                         .WithMany()
-                        .HasForeignKey("FilmId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FilmId");
 
                     b.HasOne("FilmsAboutBack.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Film");
 

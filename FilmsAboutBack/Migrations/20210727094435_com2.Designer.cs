@@ -4,14 +4,16 @@ using FilmsAboutBack.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FilmsAboutBack.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210727094435_com2")]
+    partial class com2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,24 +53,8 @@ namespace FilmsAboutBack.Migrations
                         {
                             Id = 1,
                             FilmId = 3,
-                            PublishDate = new DateTime(2021, 7, 27, 12, 53, 4, 56, DateTimeKind.Local).AddTicks(3588),
+                            PublishDate = new DateTime(2021, 7, 27, 12, 44, 35, 21, DateTimeKind.Local).AddTicks(751),
                             Text = "Wonderful movie! Definitely 5 stars!",
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            FilmId = 3,
-                            PublishDate = new DateTime(2021, 7, 27, 12, 53, 4, 57, DateTimeKind.Local).AddTicks(692),
-                            Text = "Shittiest shit ever! Don't waste your time!",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            FilmId = 3,
-                            PublishDate = new DateTime(2021, 7, 27, 12, 53, 4, 57, DateTimeKind.Local).AddTicks(723),
-                            Text = "Should I watch it or not?",
                             UserId = 3
                         });
                 });
@@ -230,7 +216,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "89bae6c5-f43e-423c-9fbd-f6b5349907c7",
+                            ConcurrencyStamp = "3debe2ad-b1c7-43b3-8be7-0137f76c4517",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -241,7 +227,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "08c96d91-a8fe-4a41-9275-74415e00f7bc",
+                            ConcurrencyStamp = "0d5ef133-01cc-403d-b414-f87f31989c9f",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -252,7 +238,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "4ab6210a-7990-4b31-92cf-cbc73ef4f54b",
+                            ConcurrencyStamp = "032bb07c-e1b9-4bb3-9439-edfafcce1429",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -263,7 +249,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "993d4153-e107-4e34-9594-d57b31403e87",
+                            ConcurrencyStamp = "5d00a387-d6a5-4bca-9905-b6241de6aa65",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -274,7 +260,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 5,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "5c9225e8-941a-4c38-bef1-bd8b06b14a43",
+                            ConcurrencyStamp = "b4cf0535-d559-40cb-968a-467644d6b853",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
