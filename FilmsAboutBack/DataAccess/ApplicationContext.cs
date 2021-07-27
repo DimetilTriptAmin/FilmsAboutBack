@@ -17,16 +17,91 @@ namespace FilmsAboutBack.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            for (int i = 1; i < 6; i++)
+            #region FilmSeeding
+            modelBuilder.Entity<Film>().HasData(new Film
             {
-                modelBuilder.Entity<Film>().HasData(new Film
-                {
-                    Id = i,
-                    Title = "film" + i.ToString(),
-                    Description = "film #" + i.ToString(),
-                    Poster = new byte[2],
-                }) ;
-            }
+                Id = 1,
+                Title = "Fight Club",
+                Description = "An insomniac office worker and a devil-may-care soap maker form an underground " +
+                    "fight club that evolves into much more.",
+                Poster = new byte[2],
+                Rating = 4.7,
+                TrailerLink= "https://www.youtube.com/watch?v=O1nDozs-LxI&ab_channel=FilmFeed",
+            });
+
+            modelBuilder.Entity<Film>().HasData(new Film
+            {
+                Id = 2,
+                Title = "Scarface",
+                Description = "In 1980 Miami, a determined Cuban immigrant takes over a drug cartel and succumbs to greed.",
+                Poster = new byte[2],
+                Rating = 4.8,
+                TrailerLink= "https://www.youtube.com/watch?v=7pQQHnqBa2E&ab_channel=FaceOff",
+            });
+
+            modelBuilder.Entity<Film>().HasData(new Film
+            {
+                Id = 3,
+                Title = "Gentlemen",
+                Description = "An American expat tries to sell off his highly profitable marijuana empire " +
+                    "in London, triggering plots, schemes, bribery and blackmail in an attempt to steal his domain " +
+                    "out from under him.",
+                Poster = new byte[2],
+                Rating = 4.5,
+                TrailerLink = "https://www.youtube.com/watch?v=Ify9S7hj480&ab_channel=MovieclipsTrailers"
+            }); ;
+
+            modelBuilder.Entity<Film>().HasData(new Film
+            {
+                Id = 4,
+                Title = "Pulp Fiction",
+                Description = "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner " +
+                    "bandits intertwine in four tales of violence and redemption.",
+                Poster = new byte[2],
+                Rating = 4.9,
+                TrailerLink = "https://www.youtube.com/watch?v=s7EdQ4FqbhY&ab_channel=Movieclips",
+            });
+
+            modelBuilder.Entity<Film>().HasData(new Film
+            {
+                Id = 5,
+                Title = "The Devil's Advocate",
+                Description = "An exceptionally adept Florida lawyer is offered a job at a high-end New York City " +
+                    "law firm with a high-end boss - the biggest opportunity of his career to date.",
+                Poster = new byte[2],
+                Rating = 4.2,
+                TrailerLink= "https://www.youtube.com/watch?v=40hHA9n4C2o&ab_channel=MovieclipsClassicTrailers",
+            });
+            #endregion
+
+            #region CommentSeeding
+            modelBuilder.Entity<Comment>().HasData(new Comment
+            {
+                Id = 1,
+                UserId = 1,
+                FilmId = 3,
+                Text = "Wonderful movie! Definitely 5 stars!",
+                PublishDate = System.DateTime.Now,
+            });
+
+            modelBuilder.Entity<Comment>().HasData(new Comment
+            {
+                Id = 2,
+                UserId = 2,
+                FilmId = 3,
+                Text = "Shittiest shit ever! Don't waste your time!",
+                PublishDate = System.DateTime.Now,
+            });
+
+            modelBuilder.Entity<Comment>().HasData(new Comment
+            {
+                Id = 3,
+                UserId = 3,
+                FilmId = 3,
+                Text = "Should I watch it or not?",
+                PublishDate = System.DateTime.Now,
+            });
+            #endregion
 
             for (int i = 1; i < 6; i++)
             {

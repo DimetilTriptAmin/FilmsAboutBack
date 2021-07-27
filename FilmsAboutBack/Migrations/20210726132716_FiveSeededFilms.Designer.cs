@@ -4,14 +4,16 @@ using FilmsAboutBack.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FilmsAboutBack.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210726132716_FiveSeededFilms")]
+    partial class FiveSeededFilms
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,7 +28,7 @@ namespace FilmsAboutBack.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("FilmId")
+                    b.Property<int?>("FilmId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("PublishDate")
@@ -35,7 +37,7 @@ namespace FilmsAboutBack.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -45,32 +47,6 @@ namespace FilmsAboutBack.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            FilmId = 3,
-                            PublishDate = new DateTime(2021, 7, 27, 12, 53, 4, 56, DateTimeKind.Local).AddTicks(3588),
-                            Text = "Wonderful movie! Definitely 5 stars!",
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            FilmId = 3,
-                            PublishDate = new DateTime(2021, 7, 27, 12, 53, 4, 57, DateTimeKind.Local).AddTicks(692),
-                            Text = "Shittiest shit ever! Don't waste your time!",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            FilmId = 3,
-                            PublishDate = new DateTime(2021, 7, 27, 12, 53, 4, 57, DateTimeKind.Local).AddTicks(723),
-                            Text = "Should I watch it or not?",
-                            UserId = 3
-                        });
                 });
 
             modelBuilder.Entity("FilmsAboutBack.Models.Film", b =>
@@ -106,8 +82,7 @@ namespace FilmsAboutBack.Migrations
                             Description = "An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves into much more.",
                             Poster = new byte[] { 0, 0 },
                             Rating = 4.7000000000000002,
-                            Title = "Fight Club",
-                            TrailerLink = "https://www.youtube.com/watch?v=O1nDozs-LxI&ab_channel=FilmFeed"
+                            Title = "Fight Club"
                         },
                         new
                         {
@@ -115,8 +90,7 @@ namespace FilmsAboutBack.Migrations
                             Description = "In 1980 Miami, a determined Cuban immigrant takes over a drug cartel and succumbs to greed.",
                             Poster = new byte[] { 0, 0 },
                             Rating = 4.7999999999999998,
-                            Title = "Scarface",
-                            TrailerLink = "https://www.youtube.com/watch?v=7pQQHnqBa2E&ab_channel=FaceOff"
+                            Title = "Scarface"
                         },
                         new
                         {
@@ -124,8 +98,7 @@ namespace FilmsAboutBack.Migrations
                             Description = "An American expat tries to sell off his highly profitable marijuana empire in London, triggering plots, schemes, bribery and blackmail in an attempt to steal his domain out from under him.",
                             Poster = new byte[] { 0, 0 },
                             Rating = 4.5,
-                            Title = "Gentlemen",
-                            TrailerLink = "https://www.youtube.com/watch?v=Ify9S7hj480&ab_channel=MovieclipsTrailers"
+                            Title = "Gentlemen"
                         },
                         new
                         {
@@ -133,8 +106,7 @@ namespace FilmsAboutBack.Migrations
                             Description = "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",
                             Poster = new byte[] { 0, 0 },
                             Rating = 4.9000000000000004,
-                            Title = "Pulp Fiction",
-                            TrailerLink = "https://www.youtube.com/watch?v=s7EdQ4FqbhY&ab_channel=Movieclips"
+                            Title = "Pulp Fiction"
                         },
                         new
                         {
@@ -142,8 +114,7 @@ namespace FilmsAboutBack.Migrations
                             Description = "An exceptionally adept Florida lawyer is offered a job at a high-end New York City law firm with a high-end boss - the biggest opportunity of his career to date.",
                             Poster = new byte[] { 0, 0 },
                             Rating = 4.2000000000000002,
-                            Title = "The Devil's Advocate",
-                            TrailerLink = "https://www.youtube.com/watch?v=40hHA9n4C2o&ab_channel=MovieclipsClassicTrailers"
+                            Title = "The Devil's Advocate"
                         });
                 });
 
@@ -230,7 +201,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "89bae6c5-f43e-423c-9fbd-f6b5349907c7",
+                            ConcurrencyStamp = "7c3c8f25-1b11-42d6-a86a-d0219fcd7589",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -241,7 +212,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "08c96d91-a8fe-4a41-9275-74415e00f7bc",
+                            ConcurrencyStamp = "564f9381-6d61-456a-a305-4d9ef04976c5",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -252,7 +223,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "4ab6210a-7990-4b31-92cf-cbc73ef4f54b",
+                            ConcurrencyStamp = "f3a84055-022b-4ba0-a229-997655805e21",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -263,7 +234,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "993d4153-e107-4e34-9594-d57b31403e87",
+                            ConcurrencyStamp = "65fd4b5f-2df7-4d8a-a871-0740d9a6a76b",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -274,7 +245,7 @@ namespace FilmsAboutBack.Migrations
                             Id = 5,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "5c9225e8-941a-4c38-bef1-bd8b06b14a43",
+                            ConcurrencyStamp = "3897b266-0ef0-4b27-96e4-3c92c4f21c47",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -406,15 +377,11 @@ namespace FilmsAboutBack.Migrations
                 {
                     b.HasOne("FilmsAboutBack.Models.Film", "Film")
                         .WithMany()
-                        .HasForeignKey("FilmId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FilmId");
 
                     b.HasOne("FilmsAboutBack.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Film");
 
