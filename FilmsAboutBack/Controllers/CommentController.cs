@@ -18,9 +18,9 @@ namespace FilmsAboutBack.Controllers
         }
 
         [HttpGet("forFilm{id}")]
-        public async Task<IEnumerable<Comment>> GetAllByFilmIdAsync(int filmId)
+        public async Task<IEnumerable<Comment>> GetAllByFilmIdAsync(int id)
         {
-            return await _commentService.GetAllByFilmIdAsync(filmId);
+            return await _commentService.GetAllByFilmIdAsync(id);
         }
 
     }
