@@ -103,6 +103,29 @@ namespace FilmsAboutBack.DataAccess
             });
             #endregion
 
+            #region RatingSeeding
+            modelBuilder.Entity<Rating>().HasData(new Rating
+            {
+                UserId = 1,
+                FilmId = 3,
+                Rate = 4,
+            });
+
+            modelBuilder.Entity<Rating>().HasData(new Rating
+            {
+                UserId = 2,
+                FilmId = 3,
+                Rate = 1,
+            });
+
+            modelBuilder.Entity<Rating>().HasData(new Rating
+            {
+                UserId = 3,
+                FilmId = 3,
+                Rate = 5,
+            });
+            #endregion
+
             for (int i = 1; i < 6; i++)
             {
                 modelBuilder.Entity<User>().HasData(new User
