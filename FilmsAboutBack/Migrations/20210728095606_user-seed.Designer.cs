@@ -4,14 +4,16 @@ using FilmsAboutBack.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FilmsAboutBack.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210728095606_user-seed")]
+    partial class userseed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +53,7 @@ namespace FilmsAboutBack.Migrations
                         {
                             Id = 1,
                             FilmId = 3,
-                            PublishDate = new DateTime(2021, 7, 28, 13, 1, 13, 858, DateTimeKind.Local).AddTicks(8583),
+                            PublishDate = new DateTime(2021, 7, 28, 12, 56, 6, 405, DateTimeKind.Local).AddTicks(9484),
                             Text = "Wonderful movie! Definitely 5 stars!",
                             UserId = 1
                         },
@@ -59,7 +61,7 @@ namespace FilmsAboutBack.Migrations
                         {
                             Id = 2,
                             FilmId = 3,
-                            PublishDate = new DateTime(2021, 7, 28, 13, 1, 13, 859, DateTimeKind.Local).AddTicks(6184),
+                            PublishDate = new DateTime(2021, 7, 28, 12, 56, 6, 407, DateTimeKind.Local).AddTicks(464),
                             Text = "Shittiest shit ever! Don't waste your time!",
                             UserId = 2
                         },
@@ -67,7 +69,7 @@ namespace FilmsAboutBack.Migrations
                         {
                             Id = 3,
                             FilmId = 3,
-                            PublishDate = new DateTime(2021, 7, 28, 13, 1, 13, 859, DateTimeKind.Local).AddTicks(6220),
+                            PublishDate = new DateTime(2021, 7, 28, 12, 56, 6, 407, DateTimeKind.Local).AddTicks(520),
                             Text = "Should I watch it or not?",
                             UserId = 3
                         });
@@ -195,8 +197,8 @@ namespace FilmsAboutBack.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("Avatar")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("Avatar")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -249,9 +251,8 @@ namespace FilmsAboutBack.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            Avatar = "E:\\ITechArt\\films-about-back\\Assets\\Img\\default-avatar.jpg",
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "49292986-669a-4c9b-a4a6-ee0a0437d5b6",
+                            ConcurrencyStamp = "ef098189-eeaf-40ea-bf31-dd60f5fd38d3",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -262,9 +263,8 @@ namespace FilmsAboutBack.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            Avatar = "E:\\ITechArt\\films-about-back\\Assets\\Img\\default-avatar.jpg",
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "d1be62db-b118-4bbc-a111-4db7d0288441",
+                            ConcurrencyStamp = "60cf6f67-bfe9-4756-b22a-0794464e3673",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -275,9 +275,8 @@ namespace FilmsAboutBack.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            Avatar = "E:\\ITechArt\\films-about-back\\Assets\\Img\\default-avatar.jpg",
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "9738cc39-c507-4ce5-9e23-c3836211b45e",
+                            ConcurrencyStamp = "b1d3330e-03ac-48ae-bf88-8c7c945a6aa2",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -288,9 +287,8 @@ namespace FilmsAboutBack.Migrations
                         {
                             Id = 4,
                             AccessFailedCount = 0,
-                            Avatar = "E:\\ITechArt\\films-about-back\\Assets\\Img\\default-avatar.jpg",
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "02c98528-e878-42f8-b5b1-e66475e435ce",
+                            ConcurrencyStamp = "80db85bc-c28f-4bdc-96a7-27339cf40c16",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
@@ -301,9 +299,8 @@ namespace FilmsAboutBack.Migrations
                         {
                             Id = 5,
                             AccessFailedCount = 0,
-                            Avatar = "E:\\ITechArt\\films-about-back\\Assets\\Img\\default-avatar.jpg",
                             BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "762f19fc-9183-4864-b252-1c2606438174",
+                            ConcurrencyStamp = "0f79b164-2f25-46fb-9d56-0ba2d26697c8",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,

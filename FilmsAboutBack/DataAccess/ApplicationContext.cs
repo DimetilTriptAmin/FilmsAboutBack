@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace FilmsAboutBack.DataAccess
 {
@@ -131,13 +132,15 @@ namespace FilmsAboutBack.DataAccess
                 modelBuilder.Entity<User>().HasData(new User
                 {
                     Id = i,
+                    UserName = "user"+i.ToString(),
+                    Avatar = Path.GetFullPath("../Assets/Img/default-avatar.jpg"),
                     BirthDate = new System.DateTime().Date,
                     LockoutEnabled = false,
                     TwoFactorEnabled = false,
                     EmailConfirmed = false,
                     PhoneNumberConfirmed = false,
                     AccessFailedCount = 0,
-                }) ;
+                });
                 
             }
 
