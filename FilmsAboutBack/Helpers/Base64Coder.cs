@@ -7,10 +7,10 @@ namespace FilmsAboutBack.Helpers
 {
     public class Base64Coder
     {
-        static public string EncodeImg(string path)
+        static public byte[] EncodeImg(string path)
         {
             byte[] imageArray = System.IO.File.ReadAllBytes(path);
-            return Convert.ToBase64String(imageArray);
+            return Convert.FromBase64String(Convert.ToBase64String(imageArray));
         }
     }
 }
