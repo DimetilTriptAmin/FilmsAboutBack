@@ -29,7 +29,7 @@ namespace FilmsAboutBack.Controllers
         }
 
         [HttpPost("add")]
-        public async Task CreateAsync(TEntity entity)
+        public virtual async Task CreateAsync(TEntity entity)
         {
             await _service.CreateAsync(entity);
         }

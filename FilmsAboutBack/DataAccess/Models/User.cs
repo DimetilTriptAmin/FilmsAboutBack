@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FilmsAboutBack.Models
 {
@@ -7,5 +9,8 @@ namespace FilmsAboutBack.Models
     {
         public string Avatar { get; set; }
         public DateTime BirthDate { get; set; }
+
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
     }
 }

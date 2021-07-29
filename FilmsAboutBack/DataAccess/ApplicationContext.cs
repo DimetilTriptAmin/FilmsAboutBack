@@ -141,8 +141,20 @@ namespace FilmsAboutBack.DataAccess
                     PhoneNumberConfirmed = false,
                     AccessFailedCount = 0,
                 });
-                
             }
+
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                Id = 10,
+                UserName = "joker228",
+                Avatar = Path.GetFullPath("../Assets/7080332121072814524.jpg"),
+                BirthDate = new System.DateTime().Date,
+                LockoutEnabled = false,
+                TwoFactorEnabled = false,
+                EmailConfirmed = false,
+                PhoneNumberConfirmed = false,
+                AccessFailedCount = 0,
+            });
 
             modelBuilder.Entity<IdentityUserLogin<int>>()
                 .HasKey(u => u.UserId);
