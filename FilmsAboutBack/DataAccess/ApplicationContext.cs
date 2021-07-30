@@ -139,7 +139,7 @@ namespace FilmsAboutBack.DataAccess
                 {
                     Id = i,
                     UserName = "user"+i.ToString(),
-                    Avatar = Path.GetFullPath("../Assets/Img/default-avatar.jpg"),
+                    Avatar = Base64Coder.EncodeImg(Path.GetFullPath(@"../FilmsAboutBack/Assets/Img/default-avatar.jpg")),
                     BirthDate = new System.DateTime().Date,
                     LockoutEnabled = false,
                     TwoFactorEnabled = false,
@@ -153,7 +153,7 @@ namespace FilmsAboutBack.DataAccess
             {
                 Id = 10,
                 UserName = "joker228",
-                Avatar = Path.GetFullPath("../Assets/7080332121072814524.jpg"),
+                Avatar = Base64Coder.EncodeImg(Path.GetFullPath(@"../FilmsAboutBack/Assets/7080332121072814524.jpg")),
                 BirthDate = new System.DateTime().Date,
                 LockoutEnabled = false,
                 TwoFactorEnabled = false,

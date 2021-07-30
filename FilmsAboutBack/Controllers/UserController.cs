@@ -24,24 +24,24 @@ namespace FilmsAboutBack.Controllers
             _hostEnvironment = hostEnvironment;
         }
 
-        [HttpPost("add")]
-        public override async Task CreateAsync([FromForm] User user)
-        {
-            user.Avatar = await SaveImage(user.ImageFile);
-            await _userService.UpdateAsync(user);
-        }
+        //[HttpPost("add")]
+        //public override async Task CreateAsync([FromForm] User user)
+        //{
+        //    user.Avatar = await SaveImage(user.ImageFile);
+        //    await _userService.UpdateAsync(user);
+        //}
 
-        [NonAction]
-        public async Task<string> SaveImage(IFormFile imageFile)
-        {
-            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
-            imageName = imageName + DateTime.Now.ToString("yyMMddssfff") + Path.GetExtension(imageFile.FileName);
-            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Assets", imageName);
-            using (var fileStream = new FileStream(imagePath, FileMode.Create))
-            {
-                await imageFile.CopyToAsync(fileStream);
-            }
-            return imageName;
-        }
+        //[NonAction]
+        //public async Task<string> SaveImage(IFormFile imageFile)
+        //{
+        //    string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
+        //    imageName = imageName + DateTime.Now.ToString("yyMMddssfff") + Path.GetExtension(imageFile.FileName);
+        //    var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Assets", imageName);
+        //    using (var fileStream = new FileStream(imagePath, FileMode.Create))
+        //    {
+        //        await imageFile.CopyToAsync(fileStream);
+        //    }
+        //    return imageName;
+        //}
     }
 }

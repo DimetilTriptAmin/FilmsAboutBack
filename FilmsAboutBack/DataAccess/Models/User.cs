@@ -7,10 +7,8 @@ namespace FilmsAboutBack.Models
 {
     public class User : IdentityUser<int>
     {
-        public string Avatar { get; set; }
+        [Column(TypeName = "varchar(max)")]
+        public byte[] Avatar { get; set; }
         public DateTime BirthDate { get; set; }
-
-        [NotMapped]
-        public IFormFile ImageFile { get; set; }
     }
 }
