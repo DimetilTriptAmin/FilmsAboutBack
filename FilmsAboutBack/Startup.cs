@@ -1,10 +1,12 @@
 using FilmsAboutBack.DataAccess;
 using FilmsAboutBack.DataAccess.UnitOfWork;
 using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
+using FilmsAboutBack.Models;
 using FilmsAboutBack.Services;
 using FilmsAboutBack.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,6 +42,17 @@ namespace FilmsAboutBack
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilmsAboutBack", Version = "v1" });
             });
+
+            services.AddIdentity<User, IdentityRole<int>>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+                .AddEntityFrameworkStores<ApplicationContext>()
+                .AddDefaultTokenProviders();
 
             services.AddTransient<DbContext, ApplicationContext>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();

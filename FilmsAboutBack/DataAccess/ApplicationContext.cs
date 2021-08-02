@@ -21,7 +21,6 @@ namespace FilmsAboutBack.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             #region FilmSeeding
             modelBuilder.Entity<Film>().HasData(new Film
             {
@@ -139,6 +138,7 @@ namespace FilmsAboutBack.DataAccess
                 {
                     Id = i,
                     UserName = "user"+i.ToString(),
+                    NormalizedUserName = ("user" + i.ToString()).ToUpper(),
                     Avatar = Base64Coder.EncodeImg(Path.GetFullPath(@"../FilmsAboutBack/Assets/Img/default-avatar.jpg")),
                     BirthDate = new System.DateTime().Date,
                     LockoutEnabled = false,
@@ -153,6 +153,8 @@ namespace FilmsAboutBack.DataAccess
             {
                 Id = 10,
                 UserName = "joker228",
+                NormalizedUserName = "joker228".ToUpper(),
+                PasswordHash = "password123",
                 Avatar = Base64Coder.EncodeImg(Path.GetFullPath(@"../FilmsAboutBack/Assets/7080332121072814524.jpg")),
                 BirthDate = new System.DateTime().Date,
                 LockoutEnabled = false,
