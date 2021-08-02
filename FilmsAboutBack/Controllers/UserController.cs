@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FilmsAboutBack.DataAccess.DTO;
+using FilmsAboutBack.Helpers;
 
 namespace FilmsAboutBack.Controllers
 {
@@ -22,6 +24,13 @@ namespace FilmsAboutBack.Controllers
         {
             _userService = userService;
             _hostEnvironment = hostEnvironment;
+        }
+
+        [HttpPost("login")]
+        public async Task<Result<LoginResponse>> Login([FromBody] LoginRequest loginData)
+        {
+            var response = await _userService.LoginUser(loginData);
+            return response;
         }
 
         //[HttpPost("add")]
