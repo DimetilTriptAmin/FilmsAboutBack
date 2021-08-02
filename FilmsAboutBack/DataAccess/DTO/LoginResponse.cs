@@ -11,8 +11,6 @@ namespace FilmsAboutBack.DataAccess.DTO
 
         // [JsonIgnore] // cause refresh token returns in http only cookie
         // public string RefreshToken { get; set; }
-
-        public LoginResponse() { }
         public LoginResponse(User user, string jwtToken)
         {
             Username = user.UserName;
