@@ -36,17 +36,7 @@ namespace FilmsAboutBack.Services
                 return Result<LoginResponse>.BadRequest($"no such username");
             }
 
-            bool isPasswordCorrect;
-
-            try
-            {
-                isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
-            }
-            catch (Exception ex)
-            {
-
-                return Result<LoginResponse>.BadRequest(ex.Message.ToString());
-            }
+            var isPasswordCorrect = await _userManager.HasPasswordAsync(user)/*.CheckPasswordAsync(user, loginRequest.Password)*/;
 
             if (!isPasswordCorrect)
             {
