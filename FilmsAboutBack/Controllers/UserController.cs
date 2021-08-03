@@ -54,15 +54,39 @@ namespace FilmsAboutBack.Controllers
             }
             catch (Exception error)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, error.Message); ;
+                return StatusCode(StatusCodes.Status500InternalServerError, error.Message);
             }
         }
 
         [HttpPost("register")]
-        public async Task<LoginResponse> Register([FromBody] LoginRequest loginData)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest registerData)
         {
-            var response = await _userService.LoginUser(loginData);
-            return response;
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState.Values.SelectMany(value => value.Errors.Select(error => error.ErrorMessage)));
+                }
+
+                var response = await _userService.RegisterUser(registerData);
+
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTimeOffset.Now.AddMinutes(Constants.MINUTES_IN_MONTH),
+                };
+                Response.Cookies.Append("refresh_token", response.RefreshToken, cookieOptions);
+
+                return Ok(response);
+            }
+            catch (ArgumentException error)
+            {
+                return BadRequest(error.Message);
+            }
+            catch (Exception error)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, error.Message);
+            }
         }
 
         //[HttpPost("add")]

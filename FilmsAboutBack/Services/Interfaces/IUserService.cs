@@ -12,5 +12,6 @@ namespace FilmsAboutBack.Services.Interfaces
     public interface IUserService : ICRUDService<User>
     {
         public Task<LoginResponse> LoginUser(LoginRequest loginRequest);
+        public Task<LoginResponse> RegisterUser(RegisterRequest registerRequest);
     }
 }

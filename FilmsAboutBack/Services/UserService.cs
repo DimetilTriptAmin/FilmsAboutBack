@@ -7,6 +7,7 @@ using FilmsAboutBack.TokenGenerators;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services
@@ -32,18 +33,45 @@ namespace FilmsAboutBack.Services
 
             if(user == null)
             {
-                throw new ArgumentException("no such username");
+                throw new ArgumentException("No such username.");
             }
 
             var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
             
-            //if (!isPasswordCorrect)
-            //{
-            //    throw new ArgumentException("password does not match");
-            //}
+            if (!isPasswordCorrect)
+            {
+                throw new ArgumentException("Password does not match.");
+            }
 
             var accessToken = _generator.GenerateAccessToken(user);
+            var refreshToken = _generator.GenerateRefreshToken();
 
+            return new LoginResponse(accessToken, refreshToken);
+        }
+
+        public async Task<LoginResponse> RegisterUser(RegisterRequest registerRequest)
+        {
+            var user = await _userManager.FindByNameAsync(registerRequest.Username);
+            if (user != null) throw new ArgumentException("This username is taken.");
+
+            user = await _userManager.FindByEmailAsync(registerRequest.Email);
+            if (user != null) throw new ArgumentException("This email is registered.");
+
+            if (registerRequest.Password!=registerRequest.ConfirmPassword) throw new ArgumentException("Passwords must be equal.");
+
+            user = new User()
+            {
+                UserName = registerRequest.Username,
+                Email = registerRequest.Email,
+            };
+            var result = await _userManager.CreateAsync(user, registerRequest.Password);
+
+            if (!result.Succeeded)
+            {
+                throw new Exception(string.Join(",",result.Errors.Select(e=>e.Description)));
+            }
+
+            var accessToken = _generator.GenerateAccessToken(user);
             var refreshToken = _generator.GenerateRefreshToken();
 
             return new LoginResponse(accessToken, refreshToken);
