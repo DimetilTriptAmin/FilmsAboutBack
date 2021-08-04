@@ -13,6 +13,8 @@ using FilmsAboutBack.DataAccess.DTO.Respones;
 using FilmsAboutBack.Helpers;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace FilmsAboutBack.Controllers
 {
@@ -22,16 +24,19 @@ namespace FilmsAboutBack.Controllers
         private IUserService _userService;
         private IWebHostEnvironment _hostEnvironment;
         private RefreshTokenValidator _refreshTokenValidator;
+        private TokenDecoder _tokenDecoder;
 
         public UserController(
-            IUserService userService, 
+            IUserService userService,
             IWebHostEnvironment hostEnvironment,
-            RefreshTokenValidator refreshTokenValidator
+            RefreshTokenValidator refreshTokenValidator,
+            TokenDecoder tokenDecoder
             ) : base(userService)
         {
             _userService = userService;
             _hostEnvironment = hostEnvironment;
             _refreshTokenValidator = refreshTokenValidator;
+            _tokenDecoder = tokenDecoder;
         }
 
         [HttpPost("login")]
@@ -96,6 +101,27 @@ namespace FilmsAboutBack.Controllers
             SetCookie(response);
 
             return Ok(response);
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("logout")]
+        public async Task<IActionResult> LogoutAsync([FromBody] LogoutRequest logoutRequest)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            int userId = _tokenDecoder.getUserIdFromToken(logoutRequest.AccessToken);
+
+            bool isTokenDeleted = await _userService.LogoutAsync(userId);
+            if (!isTokenDeleted)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+
         }
 
         private void SetCookie(LoginResponse response)

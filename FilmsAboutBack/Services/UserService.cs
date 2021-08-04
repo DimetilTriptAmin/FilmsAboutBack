@@ -50,6 +50,22 @@ namespace FilmsAboutBack.Services
             return response;
         }
 
+        public async Task<bool> LogoutAsync(int id)
+        {
+            try
+            {
+                User user = await _unitOfWork.UserRepository.GetAsync(id);
+                user.refreshToken = null;
+                await _unitOfWork.UserRepository.UpdateAsync(user);
+                await _unitOfWork.SaveAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<LoginResponse> RefreshAsync(string token)
         {
             User user = await _unitOfWork.UserRepository.GetUserByRefreshTokenAsync(token);
