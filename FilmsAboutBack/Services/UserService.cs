@@ -95,6 +95,7 @@ namespace FilmsAboutBack.Services
             var result = await _userManager.CreateAsync(user, registerRequest.Password);
             LoginResponse response = AuthorizeUser(user);
             user.refreshToken = response.RefreshToken;
+            await _userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
             {
