@@ -1,15 +1,13 @@
-﻿using FilmsAboutBack.DataAccess.DTO;
+﻿using FilmsAboutBack.DataAccess.DTO.Requests;
+using FilmsAboutBack.DataAccess.DTO.Respones;
 using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
-using FilmsAboutBack.Helpers;
 using FilmsAboutBack.Models;
 using FilmsAboutBack.Services.Interfaces;
+using FilmsAboutBack.TokenGenerators;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services
@@ -17,61 +15,66 @@ namespace FilmsAboutBack.Services
     public class UserService : CRUDService<User>, IUserService
     {
         private readonly UserManager<User> _userManager;
-        private readonly IConfiguration _config;
+        private readonly IConfiguration _configuration;
+        private readonly JwtGenerator _generator;
 
-        public UserService(IUnitOfWork unitOfWork, UserManager<User> userManager, IConfiguration config) : base(unitOfWork, unitOfWork.UserRepository)
+        public UserService(IUnitOfWork unitOfWork, UserManager<User> userManager, IConfiguration configuration, JwtGenerator generator) : base(unitOfWork, unitOfWork.UserRepository)
         {
             _userManager = userManager;
-            _config = config;
+            _configuration = configuration;
+            _generator = generator;
         }
 
         public string HashPassword(User user, string password) => _userManager.PasswordHasher.HashPassword(user, password);
 
-        public async Task<Result<LoginResponse>> LoginUser(LoginRequest loginRequest)
+        public async Task<LoginResponse> LoginUser(LoginRequest loginRequest)
         {
             var user = await _userManager.FindByNameAsync(loginRequest.Username);
 
             if(user == null)
             {
-                return Result<LoginResponse>.BadRequest($"no such username");
+                throw new ArgumentException("No such username.");
             }
 
-            var isPasswordCorrect = await _userManager.HasPasswordAsync(user)/*.CheckPasswordAsync(user, loginRequest.Password)*/;
-
+            var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
+            
             if (!isPasswordCorrect)
             {
-                return Result<LoginResponse>.BadRequest("password does not match");
+                throw new ArgumentException("Password does not match.");
             }
 
-            var token = GenerateJwtToken(user);
+            var accessToken = _generator.GenerateAccessToken(user);
+            var refreshToken = _generator.GenerateRefreshToken();
 
-            var authResponseUser = new LoginResponse(user, token);
-
-            return Result<LoginResponse>.Success(authResponseUser);
+            return new LoginResponse(accessToken, refreshToken);
         }
 
-        private string GenerateJwtToken(User user)
+        public async Task<LoginResponse> RegisterUser(RegisterRequest registerRequest)
         {
-            var claims = new[]
+            var user = await _userManager.FindByNameAsync(registerRequest.Username);
+            if (user != null) throw new ArgumentException("This username is taken.");
+
+            user = await _userManager.FindByEmailAsync(registerRequest.Email);
+            if (user != null) throw new ArgumentException("This email is registered.");
+
+            if (registerRequest.Password!=registerRequest.ConfirmPassword) throw new ArgumentException("Passwords must be equal.");
+
+            user = new User()
             {
-                new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(user.Id))
+                UserName = registerRequest.Username,
+                Email = registerRequest.Email,
             };
+            var result = await _userManager.CreateAsync(user, registerRequest.Password);
 
-            var issuer = _config.GetValue<string>("Jwt:Issuer");
-            var audience = _config.GetValue<string>("Jwt:Audience");
-            var secretKey = _config.GetValue<string>("Jwt:Secret");
+            if (!result.Succeeded)
+            {
+                throw new Exception(string.Join(",",result.Errors.Select(e=>e.Description)));
+            }
 
-            var token = new JwtSecurityToken(
-                issuer,
-                audience,
-                claims,
-                notBefore: DateTime.Now,
-                expires: DateTime.Now.AddMinutes(10),
-                new SigningCredentials(
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
-                    SecurityAlgorithms.HmacSha256));
+            var accessToken = _generator.GenerateAccessToken(user);
+            var refreshToken = _generator.GenerateRefreshToken();
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new LoginResponse(accessToken, refreshToken);
         }
     }
 }

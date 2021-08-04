@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
     public class RatingController : CRUDController<Rating>
     {

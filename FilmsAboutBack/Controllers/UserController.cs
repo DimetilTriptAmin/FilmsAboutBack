@@ -8,12 +8,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using FilmsAboutBack.DataAccess.DTO;
+using FilmsAboutBack.DataAccess.DTO.Requests;
+using FilmsAboutBack.DataAccess.DTO.Respones;
 using FilmsAboutBack.Helpers;
+using System.Net;
 
 namespace FilmsAboutBack.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
     public class UserController : CRUDController<User>
     {
@@ -27,10 +28,65 @@ namespace FilmsAboutBack.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<Result<LoginResponse>> Login([FromBody] LoginRequest loginData)
+        public async Task<IActionResult> Login([FromBody] LoginRequest loginData)
         {
-            var response = await _userService.LoginUser(loginData);
-            return response;
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState.Values.SelectMany(value => value.Errors.Select(error => error.ErrorMessage)));
+                }
+
+                var response = await _userService.LoginUser(loginData);
+
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTimeOffset.Now.AddMinutes(Constants.MINUTES_IN_MONTH),
+                };
+                Response.Cookies.Append("refresh_token", response.RefreshToken, cookieOptions);
+
+                return Ok(response);
+            }
+            catch (ArgumentException error)
+            {
+                return BadRequest(error.Message);
+            }
+            catch (Exception error)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, error.Message);
+            }
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest registerData)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState.Values.SelectMany(value => value.Errors.Select(error => error.ErrorMessage)));
+                }
+
+                var response = await _userService.RegisterUser(registerData);
+
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTimeOffset.Now.AddMinutes(Constants.MINUTES_IN_MONTH),
+                };
+                Response.Cookies.Append("refresh_token", response.RefreshToken, cookieOptions);
+
+                return Ok(response);
+            }
+            catch (ArgumentException error)
+            {
+                return BadRequest(error.Message);
+            }
+            catch (Exception error)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, error.Message);
+            }
         }
 
         //[HttpPost("add")]
