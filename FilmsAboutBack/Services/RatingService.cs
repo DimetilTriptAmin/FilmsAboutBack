@@ -13,7 +13,7 @@ namespace FilmsAboutBack.Services
         {
         }
 
-        public async Task<int> GetByPairIdAsync(int userId, int filmId)
+        public async Task<int?> GetByPairIdAsync(int userId, int filmId)
         {
             return await _unitOfWork.RatingRepository.GetByPairIdAsync(userId, filmId);
         }
@@ -22,6 +22,31 @@ namespace FilmsAboutBack.Services
         {
             var rates = _unitOfWork.RatingRepository.GetAllRatesByIdAsync(filmId).Result;
             return await Task.Run(() => rates.Average<int>(value => value));
+        }
+
+        public async Task<bool> SetRatingAsync(int rate, int filmId, int userId)
+        {
+            try
+            {
+                var actualRate = await GetByPairIdAsync(userId, filmId);
+
+                Rating rating = new Rating()
+                {
+                    Rate = rate,
+                    FilmId = filmId,
+                    UserId = userId,
+                };
+
+                if (actualRate != null) await _unitOfWork.RatingRepository.UpdateAsync(rating);
+                else await _unitOfWork.RatingRepository.CreateAsync(rating);
+                await _unitOfWork.SaveAsync();
+                return true;
+
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

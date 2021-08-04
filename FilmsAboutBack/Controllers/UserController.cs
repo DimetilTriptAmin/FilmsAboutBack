@@ -12,6 +12,7 @@ using FilmsAboutBack.DataAccess.DTO.Requests;
 using FilmsAboutBack.DataAccess.DTO.Respones;
 using FilmsAboutBack.Helpers;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FilmsAboutBack.Controllers
 {
@@ -19,16 +20,22 @@ namespace FilmsAboutBack.Controllers
     public class UserController : CRUDController<User>
     {
         private IUserService _userService;
-        private readonly IWebHostEnvironment _hostEnvironment;
+        private IWebHostEnvironment _hostEnvironment;
+        private RefreshTokenValidator _refreshTokenValidator;
 
-        public UserController(IUserService userService, IWebHostEnvironment hostEnvironment) : base(userService)
+        public UserController(
+            IUserService userService, 
+            IWebHostEnvironment hostEnvironment,
+            RefreshTokenValidator refreshTokenValidator
+            ) : base(userService)
         {
             _userService = userService;
             _hostEnvironment = hostEnvironment;
+            _refreshTokenValidator = refreshTokenValidator;
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest loginData)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginRequest loginData)
         {
             try
             {
@@ -37,14 +44,8 @@ namespace FilmsAboutBack.Controllers
                     return BadRequest(ModelState.Values.SelectMany(value => value.Errors.Select(error => error.ErrorMessage)));
                 }
 
-                var response = await _userService.LoginUser(loginData);
-
-                var cookieOptions = new CookieOptions
-                {
-                    HttpOnly = true,
-                    Expires = DateTimeOffset.Now.AddMinutes(Constants.MINUTES_IN_MONTH),
-                };
-                Response.Cookies.Append("refresh_token", response.RefreshToken, cookieOptions);
+                var response = await _userService.LoginUserAsync(loginData);
+                SetCookie(response);
 
                 return Ok(response);
             }
@@ -59,7 +60,7 @@ namespace FilmsAboutBack.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest registerData)
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest registerData)
         {
             try
             {
@@ -68,14 +69,9 @@ namespace FilmsAboutBack.Controllers
                     return BadRequest(ModelState.Values.SelectMany(value => value.Errors.Select(error => error.ErrorMessage)));
                 }
 
-                var response = await _userService.RegisterUser(registerData);
+                var response = await _userService.RegisterUserAsync(registerData);
 
-                var cookieOptions = new CookieOptions
-                {
-                    HttpOnly = true,
-                    Expires = DateTimeOffset.Now.AddMinutes(Constants.MINUTES_IN_MONTH),
-                };
-                Response.Cookies.Append("refresh_token", response.RefreshToken, cookieOptions);
+                SetCookie(response);
 
                 return Ok(response);
             }
@@ -87,6 +83,29 @@ namespace FilmsAboutBack.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, error.Message);
             }
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshAsync([FromBody] string refreshToken)
+        {
+            bool ValidationResult = _refreshTokenValidator.Validate(refreshToken);
+
+            if (!ValidationResult) return Unauthorized("Invalid token.");
+
+            var response = await _userService.RefreshAsync(refreshToken);
+            SetCookie(response);
+
+            return Ok(response);
+        }
+
+        private void SetCookie(LoginResponse response)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTimeOffset.Now.AddMinutes(Constants.MINUTES_IN_MONTH),
+            };
+            Response.Cookies.Append("refresh_token", response.RefreshToken, cookieOptions);
         }
 
         //[HttpPost("add")]

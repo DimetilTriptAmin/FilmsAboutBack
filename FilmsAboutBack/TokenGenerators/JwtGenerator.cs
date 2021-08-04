@@ -22,7 +22,7 @@ namespace FilmsAboutBack.TokenGenerators
         }
 
         public string GenerateAccessToken(User user) => GenerateToken(
-           "Jwt:RefreshSecret",
+           "Jwt:AccessSecret",
            Constants.MINUTES_IN_MONTH,
            new[]
            {
@@ -37,7 +37,7 @@ namespace FilmsAboutBack.TokenGenerators
             var audience = _configuration.GetValue<string>("Jwt:Audience");
             var key = _configuration.GetValue<string>(secretKey);
 
-            var encodedKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var encodedKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var algorithm = SecurityAlgorithms.HmacSha256;
             var signingCredentials = new SigningCredentials(encodedKey, algorithm);
 

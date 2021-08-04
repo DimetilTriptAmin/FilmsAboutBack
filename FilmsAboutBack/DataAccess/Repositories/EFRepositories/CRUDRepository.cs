@@ -34,6 +34,7 @@ namespace FilmsAboutBack.DataAccess.Repositories.EFRepositories
 
         async public Task<TEntity> UpdateAsync(TEntity item)
         {
+            _context.ChangeTracker.Clear();
             await Task.Run(() => _context.Set<TEntity>().Update(item));
             return item;
         }

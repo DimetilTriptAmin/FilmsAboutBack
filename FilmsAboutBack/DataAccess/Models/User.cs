@@ -10,5 +10,7 @@ namespace FilmsAboutBack.Models
         [Column(TypeName = "varchar(max)")]
         public byte[] Avatar { get; set; }
         public DateTime BirthDate { get; set; }
+        [Column(TypeName = "varchar(max)")]
+        public string refreshToken { get; set; }
     }
 }

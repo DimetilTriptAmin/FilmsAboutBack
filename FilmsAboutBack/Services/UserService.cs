@@ -15,19 +15,19 @@ namespace FilmsAboutBack.Services
     public class UserService : CRUDService<User>, IUserService
     {
         private readonly UserManager<User> _userManager;
-        private readonly IConfiguration _configuration;
         private readonly JwtGenerator _generator;
 
-        public UserService(IUnitOfWork unitOfWork, UserManager<User> userManager, IConfiguration configuration, JwtGenerator generator) : base(unitOfWork, unitOfWork.UserRepository)
+        public UserService(
+            IUnitOfWork unitOfWork, 
+            UserManager<User> userManager,
+            JwtGenerator generator
+            ) : base(unitOfWork, unitOfWork.UserRepository)
         {
             _userManager = userManager;
-            _configuration = configuration;
             _generator = generator;
         }
 
-        public string HashPassword(User user, string password) => _userManager.PasswordHasher.HashPassword(user, password);
-
-        public async Task<LoginResponse> LoginUser(LoginRequest loginRequest)
+        public async Task<LoginResponse> LoginUserAsync(LoginRequest loginRequest)
         {
             var user = await _userManager.FindByNameAsync(loginRequest.Username);
 
@@ -43,13 +43,24 @@ namespace FilmsAboutBack.Services
                 throw new ArgumentException("Password does not match.");
             }
 
-            var accessToken = _generator.GenerateAccessToken(user);
-            var refreshToken = _generator.GenerateRefreshToken();
+            LoginResponse response = AuthorizeUser(user);
+            user.refreshToken = response.RefreshToken;
+            await _userManager.UpdateAsync(user);
 
-            return new LoginResponse(accessToken, refreshToken);
+            return response;
         }
 
-        public async Task<LoginResponse> RegisterUser(RegisterRequest registerRequest)
+        public async Task<LoginResponse> RefreshAsync(string token)
+        {
+            User user = await _unitOfWork.UserRepository.GetUserByRefreshTokenAsync(token);
+            LoginResponse response = AuthorizeUser(user);
+            user.refreshToken = response.RefreshToken;
+            await _unitOfWork.UserRepository.UpdateAsync(user);
+            await _unitOfWork.SaveAsync();
+            return response;
+        }
+
+        public async Task<LoginResponse> RegisterUserAsync(RegisterRequest registerRequest)
         {
             var user = await _userManager.FindByNameAsync(registerRequest.Username);
             if (user != null) throw new ArgumentException("This username is taken.");
@@ -57,20 +68,28 @@ namespace FilmsAboutBack.Services
             user = await _userManager.FindByEmailAsync(registerRequest.Email);
             if (user != null) throw new ArgumentException("This email is registered.");
 
-            if (registerRequest.Password!=registerRequest.ConfirmPassword) throw new ArgumentException("Passwords must be equal.");
+            if (registerRequest.Password != registerRequest.ConfirmPassword) throw new ArgumentException("Passwords must be equal.");
 
             user = new User()
             {
                 UserName = registerRequest.Username,
                 Email = registerRequest.Email,
             };
+
             var result = await _userManager.CreateAsync(user, registerRequest.Password);
+            LoginResponse response = AuthorizeUser(user);
+            user.refreshToken = response.RefreshToken;
 
             if (!result.Succeeded)
             {
-                throw new Exception(string.Join(",",result.Errors.Select(e=>e.Description)));
+                throw new Exception(string.Join(",", result.Errors.Select(e => e.Description)));
             }
 
+            return response;
+        }
+
+        private LoginResponse AuthorizeUser(User user)
+        {
             var accessToken = _generator.GenerateAccessToken(user);
             var refreshToken = _generator.GenerateRefreshToken();
 
