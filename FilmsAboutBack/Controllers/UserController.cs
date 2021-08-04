@@ -15,6 +15,7 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Primitives;
 
 namespace FilmsAboutBack.Controllers
 {
@@ -90,7 +91,7 @@ namespace FilmsAboutBack.Controllers
             }
         }
 
-        [HttpPost("refresh")]
+        [HttpPut("refresh")]
         public async Task<IActionResult> RefreshAsync([FromBody] string refreshToken)
         {
             bool ValidationResult = _refreshTokenValidator.Validate(refreshToken);
@@ -104,21 +105,25 @@ namespace FilmsAboutBack.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpPost("logout")]
-        public async Task<IActionResult> LogoutAsync([FromBody] LogoutRequest logoutRequest)
+        [HttpDelete("logout")]
+        public async Task<IActionResult> LogoutAsync()
         {
             if(!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            int userId = _tokenDecoder.getUserIdFromToken(logoutRequest.AccessToken);
+            var token = Request.Headers["Authorization"].ToString().Split()[Constants.TOKEN_VALUE_INDEX];
+
+            int userId = _tokenDecoder.getUserIdFromToken(token.ToString());
 
             bool isTokenDeleted = await _userService.LogoutAsync(userId);
             if (!isTokenDeleted)
             {
                 return BadRequest();
             }
+
+            Response.Cookies.Delete("refresh_token");
 
             return Ok();
 
