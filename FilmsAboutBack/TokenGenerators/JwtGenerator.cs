@@ -23,7 +23,7 @@ namespace FilmsAboutBack.TokenGenerators
 
         public string GenerateAccessToken(User user) => GenerateToken(
            "Jwt:AccessSecret",
-           Constants.MINUTES_IN_MONTH,
+           0.1,
            new[]
            {
                 new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(user.Id))
@@ -31,7 +31,7 @@ namespace FilmsAboutBack.TokenGenerators
 
         public string GenerateRefreshToken() => GenerateToken("Jwt:RefreshSecret", Constants.MINUTES_IN_MONTH);
 
-        private string GenerateToken(string secretKey, int expiresInMinutes, Claim[] claims = null)
+        private string GenerateToken(string secretKey, double expiresInMinutes, Claim[] claims = null)
         {
             var issuer = _configuration.GetValue<string>("Jwt:Issuer");
             var audience = _configuration.GetValue<string>("Jwt:Audience");

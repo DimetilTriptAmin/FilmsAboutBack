@@ -51,6 +51,7 @@ namespace FilmsAboutBack.Controllers
                 }
 
                 var response = await _userService.LoginUserAsync(loginData);
+
                 SetCookie(response);
 
                 return Ok(response);
@@ -99,6 +100,7 @@ namespace FilmsAboutBack.Controllers
             if (!ValidationResult) return Unauthorized("Invalid token.");
 
             var response = await _userService.RefreshAsync(refreshToken);
+
             SetCookie(response);
 
             return Ok(response);
@@ -118,12 +120,14 @@ namespace FilmsAboutBack.Controllers
             int userId = _tokenDecoder.getUserIdFromToken(token.ToString());
 
             bool isTokenDeleted = await _userService.LogoutAsync(userId);
+
             if (!isTokenDeleted)
             {
                 return BadRequest();
             }
 
-            Response.Cookies.Delete("refresh_token");
+            //Response.Cookies.Delete("refreshToken");
+            SetCookie(new LoginResponse("", ""));
 
             return Ok();
 
@@ -135,8 +139,10 @@ namespace FilmsAboutBack.Controllers
             {
                 HttpOnly = true,
                 Expires = DateTimeOffset.Now.AddMinutes(Constants.MINUTES_IN_MONTH),
+                SameSite = SameSiteMode.None,
+                Secure = true,
             };
-            Response.Cookies.Append("refresh_token", response.RefreshToken, cookieOptions);
+            Response.Cookies.Append("refreshToken", response.RefreshToken, cookieOptions);
         }
 
         //[HttpPost("add")]

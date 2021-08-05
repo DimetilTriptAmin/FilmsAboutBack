@@ -55,7 +55,7 @@ namespace FilmsAboutBack.Services
             try
             {
                 User user = await _unitOfWork.UserRepository.GetAsync(id);
-                user.refreshToken = null;
+                user.refreshToken = "";
                 await _unitOfWork.UserRepository.UpdateAsync(user);
                 await _unitOfWork.SaveAsync();
                 return true;
