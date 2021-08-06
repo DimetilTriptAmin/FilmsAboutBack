@@ -93,13 +93,15 @@ namespace FilmsAboutBack.Controllers
         }
 
         [HttpPut("refresh")]
-        public async Task<IActionResult> RefreshAsync([FromBody] string refreshToken)
+        public async Task<IActionResult> RefreshAsync()
         {
-            bool ValidationResult = _refreshTokenValidator.Validate(refreshToken);
+            Request.Headers.TryGetValue("refreshToken", out StringValues refreshToken);
+
+            bool ValidationResult = _refreshTokenValidator.Validate(refreshToken.ToString());
 
             if (!ValidationResult) return Unauthorized("Invalid token.");
 
-            var response = await _userService.RefreshAsync(refreshToken);
+            var response = await _userService.RefreshAsync(refreshToken.ToString());
 
             SetCookie(response);
 
