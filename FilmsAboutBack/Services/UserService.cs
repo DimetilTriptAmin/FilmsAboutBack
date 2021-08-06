@@ -27,6 +27,12 @@ namespace FilmsAboutBack.Services
             _generator = generator;
         }
 
+        public async Task<UserResponse> GetUserByIdAsync(int id)
+        {
+            var user = await _unitOfWork.UserRepository.GetAsync(id);
+            return new UserResponse() { UserName = user.UserName, Email = user.Email, Avatar = user.Avatar };
+        }
+
         public async Task<LoginResponse> LoginUserAsync(LoginRequest loginRequest)
         {
             var user = await _userManager.FindByNameAsync(loginRequest.Username);

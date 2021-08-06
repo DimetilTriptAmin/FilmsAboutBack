@@ -23,7 +23,7 @@ namespace FilmsAboutBack.TokenGenerators
 
         public string GenerateAccessToken(User user) => GenerateToken(
            "Jwt:AccessSecret",
-           0.1,
+           10,
            new[]
            {
                 new Claim(JwtRegisteredClaimNames.Sub, Convert.ToString(user.Id))

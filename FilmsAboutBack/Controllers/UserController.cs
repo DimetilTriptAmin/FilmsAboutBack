@@ -40,6 +40,13 @@ namespace FilmsAboutBack.Controllers
             _tokenDecoder = tokenDecoder;
         }
 
+        [HttpGet("userById{id}")]
+        public async Task<IActionResult> GetUserByIdAsync(int id)
+        {
+            var response = await _userService.GetUserByIdAsync(id);
+            return Ok(response);
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequest loginData)
         {

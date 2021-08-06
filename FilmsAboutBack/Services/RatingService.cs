@@ -1,4 +1,5 @@
-﻿using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
+﻿using FilmsAboutBack.DataAccess.DTO.Respones;
+using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
 using FilmsAboutBack.Models;
 using FilmsAboutBack.Services.Interfaces;
 using System.Collections.Generic;
@@ -13,9 +14,11 @@ namespace FilmsAboutBack.Services
         {
         }
 
-        public async Task<int?> GetByPairIdAsync(int userId, int filmId)
+        public async Task<RatingResponse> GetByPairIdAsync(int userId, int filmId)
         {
-            return await _unitOfWork.RatingRepository.GetByPairIdAsync(userId, filmId);
+            var rating = await _unitOfWork.RatingRepository.GetByPairIdAsync(userId, filmId);
+            var response = new RatingResponse() { Rate = rating.Rate, UserId = rating.UserId };
+            return response;
         }
 
         public async Task<double> GetRatingByIdAsync(int filmId)
