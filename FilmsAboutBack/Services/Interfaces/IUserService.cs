@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services.Interfaces
 {
-    public interface IUserService : ICRUDService<User>
+    public interface IUserService
     {
         public Task<LoginResponse> LoginUserAsync(LoginRequest loginRequest);
         public Task<LoginResponse> RegisterUserAsync(RegisterRequest registerRequest);

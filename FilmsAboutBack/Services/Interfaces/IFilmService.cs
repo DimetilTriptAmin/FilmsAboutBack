@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services.Interfaces
 {
-    public interface IFilmService : ICRUDService<Film>
+    public interface IFilmService
     {
         Task<IEnumerable<Film>> GetAllAsync();
+        Task<Film> GetFilmAsync(int id);
     }
 }

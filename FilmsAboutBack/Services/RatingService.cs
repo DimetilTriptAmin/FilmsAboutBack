@@ -8,30 +8,46 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services
 {
-    public class RatingService : CRUDService<Rating>, IRatingService
+    public class RatingService : ServiceBase, IRatingService
     {
-        public RatingService(IUnitOfWork unitOfWork) : base(unitOfWork, unitOfWork.RatingRepository)
+        public RatingService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 
-        public async Task<RatingResponse> GetByPairIdAsync(int userId, int filmId)
+        public async Task<RatingResponse> GetUserRatingAsync(int userId, int filmId)
         {
-            var rating = await _unitOfWork.RatingRepository.GetByPairIdAsync(userId, filmId);
-            var response = new RatingResponse() { Rate = rating.Rate, UserId = rating.UserId };
-            return response;
+            try
+            {
+                var request = await _unitOfWork.RatingRepository.Filter(rating => rating.UserId == userId && rating.FilmId == filmId);
+                var rating = request.FirstOrDefault();
+                var response = new RatingResponse() { Rate = rating.Rate, UserId = rating.UserId };
+                return response;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
-        public async Task<double> GetRatingByIdAsync(int filmId)
+        public async Task<double> GetRatingAsync(int filmId)
         {
-            var rates = _unitOfWork.RatingRepository.GetAllRatesByIdAsync(filmId).Result;
-            return await Task.Run(() => rates.Average<int>(value => value));
+            try
+            {
+                var request = await _unitOfWork.RatingRepository.Filter(r => r.FilmId == filmId);
+                var rates = request.Select(rating => rating.Rate);
+                return await Task.Run(() => rates.Average(value => value));
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         public async Task<bool> SetRatingAsync(int rate, int filmId, int userId)
         {
             try
             {
-                var actualRate = await GetByPairIdAsync(userId, filmId);
+                var actualRate = await GetUserRatingAsync(userId, filmId);
 
                 Rating rating = new Rating()
                 {

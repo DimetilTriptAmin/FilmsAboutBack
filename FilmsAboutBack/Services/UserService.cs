@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services
 {
-    public class UserService : CRUDService<User>, IUserService
+    public class UserService : ServiceBase, IUserService
     {
         private readonly UserManager<User> _userManager;
         private readonly JwtGenerator _generator;
@@ -21,7 +21,7 @@ namespace FilmsAboutBack.Services
             IUnitOfWork unitOfWork, 
             UserManager<User> userManager,
             JwtGenerator generator
-            ) : base(unitOfWork, unitOfWork.UserRepository)
+            ) : base(unitOfWork)
         {
             _userManager = userManager;
             _generator = generator;
@@ -74,7 +74,8 @@ namespace FilmsAboutBack.Services
 
         public async Task<LoginResponse> RefreshAsync(string token)
         {
-            User user = await _unitOfWork.UserRepository.GetUserByRefreshTokenAsync(token);
+            var request = await _unitOfWork.UserRepository.Filter(user => user.refreshToken == token);
+            var user = request.FirstOrDefault();
             LoginResponse response = AuthorizeUser(user);
             user.refreshToken = response.RefreshToken;
             await _unitOfWork.UserRepository.UpdateAsync(user);

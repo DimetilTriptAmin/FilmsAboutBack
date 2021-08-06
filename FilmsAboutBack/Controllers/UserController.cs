@@ -19,8 +19,9 @@ using Microsoft.Extensions.Primitives;
 
 namespace FilmsAboutBack.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class UserController : CRUDController<User>
+    public class UserController : ControllerBase
     {
         private IUserService _userService;
         private IWebHostEnvironment _hostEnvironment;
@@ -32,7 +33,7 @@ namespace FilmsAboutBack.Controllers
             IWebHostEnvironment hostEnvironment,
             RefreshTokenValidator refreshTokenValidator,
             TokenDecoder tokenDecoder
-            ) : base(userService)
+            ) 
         {
             _userService = userService;
             _hostEnvironment = hostEnvironment;

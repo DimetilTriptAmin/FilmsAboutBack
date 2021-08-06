@@ -3,6 +3,7 @@ using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using FilmsAboutBack.DataAccess.Repositories.EFRepositories;
+using FilmsAboutBack.Models;
 
 namespace FilmsAboutBack.DataAccess.UnitOfWork
 {
@@ -10,34 +11,34 @@ namespace FilmsAboutBack.DataAccess.UnitOfWork
     {
         private readonly DbContext _dbContext;
 
-        private IUserRepository _userRepository;
-        private IFilmRepository _filmRepository;
-        private ICommentRepository _commentRepository;
-        private IRatingRepository _ratingRepository;
+        private IGenericRepository<User> _userRepository;
+        private IGenericRepository<Film> _filmRepository;
+        private IGenericRepository<Comment> _commentRepository;
+        private IGenericRepository<Rating> _ratingRepository;
 
         public UnitOfWork(DbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public IUserRepository UserRepository 
+        public IGenericRepository<User> UserRepository 
         { 
-            get { return _userRepository ??= new UserRepository(_dbContext); }
+            get { return _userRepository ??= new GenericRepository<User>(_dbContext); }
         }
 
-        public IFilmRepository FilmRepository
+        public IGenericRepository<Film> FilmRepository
         {
-            get { return _filmRepository ??= new FilmRepository(_dbContext); }
+            get { return _filmRepository ??= new GenericRepository<Film>(_dbContext); }
         }
 
-        public ICommentRepository CommentRepository
+        public IGenericRepository<Comment> CommentRepository
         {
-            get { return _commentRepository ??= new CommentRepository(_dbContext); }
+            get { return _commentRepository ??= new GenericRepository<Comment>(_dbContext); }
         }
 
-        public IRatingRepository RatingRepository
+        public IGenericRepository<Rating> RatingRepository
         {
-            get { return _ratingRepository ??= new RatingRepository(_dbContext); }
+            get { return _ratingRepository ??= new GenericRepository<Rating>(_dbContext); }
         }
 
         public void Dispose()

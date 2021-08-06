@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services.Interfaces
 {
-    public interface IRatingService : ICRUDService<Rating>
+    public interface IRatingService
     {
-        Task<RatingResponse> GetByPairIdAsync(int userId, int filmId);
-        Task<double> GetRatingByIdAsync(int filmId);
+        Task<RatingResponse> GetUserRatingAsync(int userId, int filmId);
+        Task<double> GetRatingAsync(int filmId);
         Task<bool> SetRatingAsync(int rate, int filmId, int userId);
     }
 }

@@ -11,8 +11,9 @@ using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class RatingController : CRUDController<Rating>
+    public class RatingController : ControllerBase
     {
         private IRatingService _ratingService;
         private TokenDecoder _tokenDecoder;
@@ -20,23 +21,41 @@ namespace FilmsAboutBack.Controllers
         public RatingController(
             IRatingService ratingService, 
             TokenDecoder tokenDecoder
-            ) : base(ratingService)
+            )
         {
             _ratingService = ratingService;
             _tokenDecoder = tokenDecoder;
         }
 
-        [HttpGet("getByPair")]
-        public async Task<IActionResult> GetByPairIdAsync(int filmId, int userId)
+        [HttpGet("getUserRating")]
+        public async Task<IActionResult> GetUserRatingAsync(int filmId, int userId)
         {
-            var response = await _ratingService.GetByPairIdAsync(userId, filmId);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid inputs.");
+            }
+
+            var response = await _ratingService.GetUserRatingAsync(userId, filmId);
+            if (response == null)
+            {
+                return BadRequest("Not found.");
+            }
+
             return Ok(response);
         }
 
         [HttpGet("forFilm{filmId}")]
-        public async Task<double> GetRatingByFilmIdAsync(int filmId)
+        public async Task<IActionResult> GetRatingAsync(int filmId)
         {
-            return await _ratingService.GetRatingByIdAsync(filmId);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid inputs.");
+            }
+
+            var response = await _ratingService.GetRatingAsync(filmId);
+
+            return Ok(response);
         }
 
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
