@@ -27,9 +27,10 @@ namespace FilmsAboutBack.Controllers
         }
 
         [HttpGet("getByPair")]
-        public async Task<int?> GetByPairIdAsync(int filmId, int userId)
+        public async Task<IActionResult> GetByPairIdAsync(int filmId, int userId)
         {
-            return await _ratingService.GetByPairIdAsync(userId, filmId);
+            var response = await _ratingService.GetByPairIdAsync(userId, filmId);
+            return Ok(response);
         }
 
         [HttpGet("forFilm{filmId}")]
@@ -37,6 +38,30 @@ namespace FilmsAboutBack.Controllers
         {
             return await _ratingService.GetRatingByIdAsync(filmId);
         }
+
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[HttpGet("ratingForFilm/{filmId}")]
+        //public async Task<IActionResult> GetCurrentRatingByFilmIdAsync(int filmId)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest("Invalid inputs.");
+        //    }
+
+        //    var token = Request.Headers["Authorization"].ToString().Split()[Constants.TOKEN_VALUE_INDEX];
+        //    var userId = _tokenDecoder.getUserIdFromToken(token);
+
+        //    var result = await _ratingService.SetRatingAsync(setRatingRequest.Rate, setRatingRequest.FilmId, userId);
+
+        //    if (!result)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    return Ok();
+
+        //    return await _ratingService.GetRatingByIdAsync(filmId);
+        //}
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("rateFilm")]

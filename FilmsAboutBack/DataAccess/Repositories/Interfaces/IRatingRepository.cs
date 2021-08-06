@@ -6,7 +6,7 @@ namespace FilmsAboutBack.DataAccess.Repositories.Interfaces
 {
     public interface IRatingRepository : ICRUDRepository<Rating>
     {
-        Task<int?> GetByPairIdAsync(int userId, int filmId);
+        Task<Rating> GetByPairIdAsync(int userId, int filmId);
         Task<IEnumerable<int>> GetAllRatesByIdAsync(int filmId);
     }
 }
