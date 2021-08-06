@@ -16,12 +16,12 @@ namespace FilmsAboutBack.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet("forFilm{id}")]
-        public async Task<IActionResult> GetAllByFilmIdAsync(int id)
+        [HttpGet("getAll{filmId}")]
+        public async Task<IActionResult> GetAllByFilmIdAsync(int filmId)
         {
             try
             {
-                var response = await _commentService.GetAllByFilmIdAsync(id);
+                var response = await _commentService.GetAllByFilmIdAsync(filmId);
                 return Ok(response);
             }
             catch(Exception error)

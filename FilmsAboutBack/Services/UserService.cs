@@ -27,10 +27,17 @@ namespace FilmsAboutBack.Services
             _generator = generator;
         }
 
-        public async Task<UserResponse> GetUserByIdAsync(int id)
+        public async Task<UserResponse> GetUserAsync(int id)
         {
-            var user = await _unitOfWork.UserRepository.GetAsync(id);
-            return new UserResponse() { UserName = user.UserName, Email = user.Email, Avatar = user.Avatar };
+            try
+            {
+                var user = await _unitOfWork.UserRepository.GetAsync(id);
+                return new UserResponse() { UserName = user.UserName, Email = user.Email, Avatar = user.Avatar };
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public async Task<LoginResponse> LoginUserAsync(LoginRequest loginRequest)

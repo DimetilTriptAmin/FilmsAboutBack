@@ -15,6 +15,6 @@ namespace FilmsAboutBack.Services.Interfaces
         public Task<LoginResponse> RegisterUserAsync(RegisterRequest registerRequest);
         public Task<LoginResponse> RefreshAsync(string token);
         public Task<bool> LogoutAsync(int id);
-        public Task<UserResponse> GetUserByIdAsync(int id);
+        public Task<UserResponse> GetUserAsync(int id);
     }
 }

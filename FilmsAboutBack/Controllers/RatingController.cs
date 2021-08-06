@@ -45,7 +45,7 @@ namespace FilmsAboutBack.Controllers
             return Ok(response);
         }
 
-        [HttpGet("forFilm{filmId}")]
+        [HttpGet("{filmId}")]
         public async Task<IActionResult> GetRatingAsync(int filmId)
         {
             if (!ModelState.IsValid)

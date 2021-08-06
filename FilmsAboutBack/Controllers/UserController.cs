@@ -41,10 +41,12 @@ namespace FilmsAboutBack.Controllers
             _tokenDecoder = tokenDecoder;
         }
 
-        [HttpGet("userById{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetUserByIdAsync(int id)
         {
-            var response = await _userService.GetUserByIdAsync(id);
+            var response = await _userService.GetUserAsync(id);
+            if (response == null) return BadRequest("Not found.");
+
             return Ok(response);
         }
 
