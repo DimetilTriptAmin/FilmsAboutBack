@@ -96,7 +96,6 @@ namespace FilmsAboutBack.Controllers
             Request.Cookies.TryGetValue("refreshToken", out string refreshToken);
 
             bool ValidationResult = _refreshTokenValidator.Validate(refreshToken);
-
             if (!ValidationResult) return Unauthorized("Invalid token.");
 
             var response = await _userService.RefreshAsync(refreshToken);
