@@ -1,8 +1,9 @@
 ﻿using FilmsAboutBack.DataAccess.DTO.Respones;
 using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
+using FilmsAboutBack.Helpers;
 using FilmsAboutBack.Models;
 using FilmsAboutBack.Services.Interfaces;
-using System.Collections.Generic;
+using System.Net;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,40 +15,28 @@ namespace FilmsAboutBack.Services
         {
         }
 
-        public async Task<RatingResponse> GetUserRatingAsync(int userId, int filmId)
+        public async Task<GenericResponse<RatingResponse>> GetUserRatingAsync(int userId, int filmId)
         {
             try
             {
                 var request = await _unitOfWork.RatingRepository.Filter(rating => rating.UserId == userId && rating.FilmId == filmId);
                 var rating = request.FirstOrDefault();
-                var response = new RatingResponse() { Rate = rating.Rate, UserId = rating.UserId };
-                return response;
+
+                var response = new RatingResponse() { Rate = rating == null ? 0 : rating.Rate, UserId = userId };
+                return new GenericResponse<RatingResponse>(response, HttpStatusCode.OK);
             }
             catch
             {
-                return null;
+                return new GenericResponse<RatingResponse>("Internal server error.", HttpStatusCode.InternalServerError);
             }
         }
 
-        public async Task<double> GetRatingAsync(int filmId)
+        public async Task<GenericResponse<bool>> SetRatingAsync(int rate, int filmId, int userId)
         {
             try
             {
-                var request = await _unitOfWork.RatingRepository.Filter(r => r.FilmId == filmId);
-                var rates = request.Select(rating => rating.Rate);
-                return await Task.Run(() => rates.Average(value => value));
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        public async Task<bool> SetRatingAsync(int rate, int filmId, int userId)
-        {
-            try
-            {
-                var actualRate = await GetUserRatingAsync(userId, filmId);
+                var request = await _unitOfWork.RatingRepository.Filter(rating => rating.UserId == userId && rating.FilmId == filmId);
+                var currentRating = request.FirstOrDefault();
 
                 Rating rating = new Rating()
                 {
@@ -56,16 +45,30 @@ namespace FilmsAboutBack.Services
                     UserId = userId,
                 };
 
-                if (actualRate != null) await _unitOfWork.RatingRepository.UpdateAsync(rating);
+                if (currentRating != null)
+                {
+                    currentRating.Rate = rate;
+                }
                 else await _unitOfWork.RatingRepository.CreateAsync(rating);
                 await _unitOfWork.SaveAsync();
-                return true;
 
+                var film = await _unitOfWork.FilmRepository.GetAsync(filmId);
+                film.Rating = await GetRatingAsync(filmId);
+                await _unitOfWork.SaveAsync();
+
+                return new GenericResponse<bool>(true, HttpStatusCode.OK);
             }
             catch
             {
-                return false;
+                return new GenericResponse<bool>("Internal server error.", HttpStatusCode.InternalServerError);
             }
+        }
+
+        private async Task<double> GetRatingAsync(int filmId)
+        {
+            var request = await _unitOfWork.RatingRepository.Filter(r => r.FilmId == filmId);
+            var rates = request.Select(rating => rating.Rate);
+            return rates.Average(value => value);
         }
     }
 }

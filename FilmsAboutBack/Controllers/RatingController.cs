@@ -27,60 +27,28 @@ namespace FilmsAboutBack.Controllers
             _tokenDecoder = tokenDecoder;
         }
 
-        [HttpGet("getUserRating")]
-        public async Task<IActionResult> GetUserRatingAsync(int filmId, int userId)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("getUserRating{filmId}")]
+        public async Task<IActionResult> GetUserRatingAsync(int filmId)
         {
 
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid inputs.");
             }
+
+            var token = Request.Headers["Authorization"].ToString().Split()[Constants.TOKEN_VALUE_INDEX];
+            var userId = _tokenDecoder.getUserIdFromToken(token);
 
             var response = await _ratingService.GetUserRatingAsync(userId, filmId);
-            if (response == null)
+
+            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
             {
-                return BadRequest("Not found.");
-            }
+                StatusCode = (int?)response.StatusCode
+            };
 
-            return Ok(response);
+            return objectResult;
         }
-
-        [HttpGet("{filmId}")]
-        public async Task<IActionResult> GetRatingAsync(int filmId)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Invalid inputs.");
-            }
-
-            var response = await _ratingService.GetRatingAsync(filmId);
-
-            return Ok(response);
-        }
-
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //[HttpGet("ratingForFilm/{filmId}")]
-        //public async Task<IActionResult> GetCurrentRatingByFilmIdAsync(int filmId)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest("Invalid inputs.");
-        //    }
-
-        //    var token = Request.Headers["Authorization"].ToString().Split()[Constants.TOKEN_VALUE_INDEX];
-        //    var userId = _tokenDecoder.getUserIdFromToken(token);
-
-        //    var result = await _ratingService.SetRatingAsync(setRatingRequest.Rate, setRatingRequest.FilmId, userId);
-
-        //    if (!result)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    return Ok();
-
-        //    return await _ratingService.GetRatingByIdAsync(filmId);
-        //}
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("rateFilm")]
@@ -95,14 +63,14 @@ namespace FilmsAboutBack.Controllers
             var token = Request.Headers["Authorization"].ToString().Split()[Constants.TOKEN_VALUE_INDEX];
             var userId = _tokenDecoder.getUserIdFromToken(token);
 
-            var result = await _ratingService.SetRatingAsync(setRatingRequest.Rate, setRatingRequest.FilmId, userId);
+            var response = await _ratingService.SetRatingAsync(setRatingRequest.Rate, setRatingRequest.FilmId, userId);
 
-            if (!result)
+            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
             {
-                return BadRequest();
-            }
+                StatusCode = (int?)response.StatusCode
+            };
 
-            return Ok();
+            return objectResult;
         }
 
     }
