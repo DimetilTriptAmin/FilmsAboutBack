@@ -1,21 +1,17 @@
-﻿using FilmsAboutBack.Models;
+﻿using FilmsAboutBack.DataAccess.DTO.Requests;
+using FilmsAboutBack.DataAccess.DTO.Respones;
+using FilmsAboutBack.Helpers;
 using FilmsAboutBack.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Net.Http;
 using System.Linq;
 using System.Threading.Tasks;
-using FilmsAboutBack.DataAccess.DTO.Requests;
-using FilmsAboutBack.DataAccess.DTO.Respones;
-using FilmsAboutBack.Helpers;
 using System.Net;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.Extensions.Primitives;
 
 namespace FilmsAboutBack.Controllers
 {
@@ -45,104 +41,94 @@ namespace FilmsAboutBack.Controllers
         public async Task<IActionResult> GetUserByIdAsync(int id)
         {
             var response = await _userService.GetUserAsync(id);
-            if (response == null) return BadRequest("Not found.");
 
-            return Ok(response);
+            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
+            {
+                StatusCode = (int?)response.StatusCode
+            };
+
+            return objectResult;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequest loginData)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState.Values.SelectMany(value => value.Errors.Select(error => error.ErrorMessage)));
-                }
-
-                var response = await _userService.LoginUserAsync(loginData);
-
-                SetCookie(response);
-
-                return Ok(response);
+                return BadRequest(ModelState.Values.SelectMany(value => value.Errors.Select(error => error.ErrorMessage)));
             }
-            catch (ArgumentException error)
+
+            var response = await _userService.LoginUserAsync(loginData);
+
+            if (response.IsSucceeded) SetCookie(response.Value);
+
+            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
             {
-                return BadRequest(error.Message);
-            }
-            catch (Exception error)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, error.Message);
-            }
+                StatusCode = (int?)response.StatusCode
+            };
+
+            return objectResult;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest registerData)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState.Values.SelectMany(value => value.Errors.Select(error => error.ErrorMessage)));
-                }
-
-                var response = await _userService.RegisterUserAsync(registerData);
-
-                SetCookie(response);
-
-                return Ok(response);
+                return BadRequest(ModelState.Values.SelectMany(value => value.Errors.Select(error => error.ErrorMessage)));
             }
-            catch (ArgumentException error)
+
+            var response = await _userService.RegisterUserAsync(registerData);
+
+            if (response.IsSucceeded) SetCookie(response.Value);
+
+            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
             {
-                return BadRequest(error.Message);
-            }
-            catch (Exception error)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, error.Message);
-            }
+                StatusCode = (int?)response.StatusCode
+            };
+
+            return objectResult;
         }
 
         [HttpPut("refresh")]
         public async Task<IActionResult> RefreshAsync()
         {
-            Request.Headers.TryGetValue("refreshToken", out StringValues refreshToken);
+            Request.Cookies.TryGetValue("refreshToken", out string refreshToken);
 
-            bool ValidationResult = _refreshTokenValidator.Validate(refreshToken.ToString());
+            bool ValidationResult = _refreshTokenValidator.Validate(refreshToken);
 
             if (!ValidationResult) return Unauthorized("Invalid token.");
 
-            var response = await _userService.RefreshAsync(refreshToken.ToString());
+            var response = await _userService.RefreshAsync(refreshToken);
 
-            SetCookie(response);
+            if (response.IsSucceeded) SetCookie(response.Value);
 
-            return Ok(response);
+            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
+            {
+                StatusCode = (int?)response.StatusCode
+            };
+
+            return objectResult;
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("logout")]
         public async Task<IActionResult> LogoutAsync()
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var token = Request.Headers["Authorization"].ToString().Split()[Constants.TOKEN_VALUE_INDEX];
 
             int userId = _tokenDecoder.getUserIdFromToken(token.ToString());
 
-            bool isTokenDeleted = await _userService.LogoutAsync(userId);
+            var response = await _userService.LogoutAsync(userId);
 
-            if (!isTokenDeleted)
-            {
-                return BadRequest();
-            }
-
-            //Response.Cookies.Delete("refreshToken");
             SetCookie(new LoginResponse("", ""));
 
-            return Ok();
+            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
+            {
+                StatusCode = (int?)response.StatusCode
+            };
 
+            return objectResult;
         }
 
         private void SetCookie(LoginResponse response)

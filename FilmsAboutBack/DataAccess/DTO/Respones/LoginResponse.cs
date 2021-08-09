@@ -11,6 +11,7 @@ namespace FilmsAboutBack.DataAccess.DTO.Respones
         [JsonIgnore]
         public string RefreshToken { get; set; }
 
+
         public LoginResponse(string accessToken, string refreshToken)
         {
             AccessToken = accessToken;
