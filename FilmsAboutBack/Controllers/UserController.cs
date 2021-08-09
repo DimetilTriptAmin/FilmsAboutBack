@@ -38,22 +38,14 @@ namespace FilmsAboutBack.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetUserAsync()
         {
-            var response = await _userService.GetUserAsync(id);
+            var token = Request.Headers["Authorization"].ToString().Split()[Constants.TOKEN_VALUE_INDEX];
 
-            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
-            {
-                StatusCode = (int?)response.StatusCode
-            };
+            int userId = _tokenDecoder.getUserIdFromToken(token);
 
-            return objectResult;
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserByIdAsync(int id)
-        {
-            var response = await _userService.GetUserAsync(id);
+            var response = await _userService.GetUserAsync(userId);
 
             ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
             {
@@ -123,13 +115,13 @@ namespace FilmsAboutBack.Controllers
             return objectResult;
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("logout")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> LogoutAsync()
         {
             var token = Request.Headers["Authorization"].ToString().Split()[Constants.TOKEN_VALUE_INDEX];
 
-            int userId = _tokenDecoder.getUserIdFromToken(token.ToString());
+            int userId = _tokenDecoder.getUserIdFromToken(token);
 
             var response = await _userService.LogoutAsync(userId);
 

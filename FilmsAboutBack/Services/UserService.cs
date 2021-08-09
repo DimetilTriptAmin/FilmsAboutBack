@@ -110,12 +110,13 @@ namespace FilmsAboutBack.Services
             {
                 var request = await _unitOfWork.UserRepository.Filter(user => user.refreshToken == token);
 
-                if (request == null)
+                var user = request.FirstOrDefault();
+
+                if (user == null)
                 {
                     return new GenericResponse<LoginResponse>("Invalid token.", HttpStatusCode.BadRequest);
                 }
 
-                var user = request.FirstOrDefault();
                 LoginResponse response = AuthorizeUser(user);
                 user.refreshToken = response.RefreshToken;
                 await _unitOfWork.UserRepository.UpdateAsync(user);
