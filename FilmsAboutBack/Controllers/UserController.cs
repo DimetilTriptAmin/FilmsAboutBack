@@ -37,6 +37,19 @@ namespace FilmsAboutBack.Controllers
             _tokenDecoder = tokenDecoder;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetUserAsync()
+        {
+            var response = await _userService.GetUserAsync(id);
+
+            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
+            {
+                StatusCode = (int?)response.StatusCode
+            };
+
+            return objectResult;
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserByIdAsync(int id)
         {
