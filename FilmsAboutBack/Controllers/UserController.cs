@@ -55,6 +55,22 @@ namespace FilmsAboutBack.Controllers
             return objectResult;
         }
 
+        [HttpPut("update")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> UpdateAsync([FromBody] UpdateRequest updateData)
+        {
+            var response = await _userService.UpdateAsync(loginData);
+
+            if (response.IsSucceeded) SetCookie(response.Value);
+
+            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
+            {
+                StatusCode = (int?)response.StatusCode
+            };
+
+            return objectResult;
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequest loginData)
         {

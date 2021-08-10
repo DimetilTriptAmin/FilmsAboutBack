@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace FilmsAboutBack.Services
 {
@@ -50,6 +51,28 @@ namespace FilmsAboutBack.Services
                 return new GenericResponse<UserResponse>("Server is offline.", HttpStatusCode.InternalServerError);
             }
         }
+
+        //public async Task<GenericResponse<UpdateResponse>> UpdateAsync(UpdateRequest updateRequest)
+        //{
+        //    try
+        //    {
+        //        var user = await _unitOfWork.UserRepository.GetAsync(id);
+
+        //        if (user == null)
+        //        {
+        //            return new GenericResponse<UserResponse>("User not found.", HttpStatusCode.NotFound);
+        //        }
+
+        //        UserResponse userResponse = new UserResponse()
+        //        { Avatar = user.Avatar, Email = user.Email, UserName = user.UserName };
+
+        //        return new GenericResponse<UserResponse>(userResponse, HttpStatusCode.OK);
+        //    }
+        //    catch
+        //    {
+        //        return new GenericResponse<UserResponse>("Server is offline.", HttpStatusCode.InternalServerError);
+        //    }
+        //}
 
         public async Task<GenericResponse<LoginResponse>> LoginUserAsync(LoginRequest loginRequest)
         {
@@ -155,6 +178,7 @@ namespace FilmsAboutBack.Services
                 {
                     UserName = registerRequest.Username,
                     Email = registerRequest.Email,
+                    Avatar = Base64Coder.EncodeImg(Path.GetFullPath(@"../FilmsAboutBack/Assets/Img/default-avatar.jpg")),
                 };
 
                 var result = await _userManager.CreateAsync(user, registerRequest.Password);
