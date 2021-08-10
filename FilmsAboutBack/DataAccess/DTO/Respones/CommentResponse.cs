@@ -7,6 +7,7 @@ namespace FilmsAboutBack.DataAccess.DTO.Respones
 {
     public class CommentResponse
     {
+        public int Id { get; set; }
         public string UserName { get; set; }
         public byte[] Avatar { get; set; }
         public string Text { get; set; }
