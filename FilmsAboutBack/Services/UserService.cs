@@ -96,7 +96,7 @@ namespace FilmsAboutBack.Services
                 user.refreshToken = "";
                 await _unitOfWork.UserRepository.UpdateAsync(user);
                 await _unitOfWork.SaveAsync();
-                return new GenericResponse<bool>(true, HttpStatusCode.BadRequest); ;
+                return new GenericResponse<bool>(true, HttpStatusCode.OK);
             }
             catch
             {
