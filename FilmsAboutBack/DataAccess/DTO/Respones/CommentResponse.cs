@@ -19,6 +19,15 @@ namespace FilmsAboutBack.DataAccess.DTO.Respones
             Rating = rating;
             PublishDate = publishDate;
         }
+        public CommentResponse(int id, string userName, byte[] avatar, string text, int rating, DateTime publishDate)
+        {
+            Id = id;
+            UserName = userName;
+            Avatar = avatar;
+            Text = text;
+            Rating = rating;
+            PublishDate = publishDate;
+        }
 
     }
 }

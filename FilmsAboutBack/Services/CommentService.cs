@@ -1,13 +1,11 @@
 ﻿using FilmsAboutBack.DataAccess.DTO.Respones;
 using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
-using System.Linq;
-using FilmsAboutBack.Services.Interfaces;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using FilmsAboutBack.Helpers;
-using System.Net;
 using FilmsAboutBack.Models;
+using FilmsAboutBack.Services.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services
 {
@@ -25,39 +23,25 @@ namespace FilmsAboutBack.Services
 
                 if(user == null)
                 {
-                    return new GenericResponse<CommentResponse>("User not found.", HttpStatusCode.BadRequest);
+                    return new GenericResponse<CommentResponse>("User not found.");
                 }
 
-                Comment comment = new Comment()
-                {
-                    UserId = userId,
-                    FilmId = filmId,
-                    Text = text,
-                    PublishDate = DateTime.Now,
-                };
+                Comment comment = new Comment(userId, filmId, text, DateTime.Now);
 
                 await _unitOfWork.CommentRepository.CreateAsync(comment);
                 await _unitOfWork.SaveAsync();
 
                 var ratingRequest = await _unitOfWork.RatingRepository.Filter(r => r.FilmId == filmId && r.UserId == userId);
                 var rating = ratingRequest.FirstOrDefault();
+                var rate = rating == null ? 0 : rating.Rate;
 
-                CommentResponse commentResponse = new CommentResponse()
-                {
-                    Id = comment.Id,
-                    Text = text,
-                    UserName = user.UserName,
-                    Avatar = user.Avatar,
-                    PublishDate = comment.PublishDate,
-                    Rating = rating == null ? 0 : rating.Rate,
-                };
-
-                return new GenericResponse<CommentResponse>(commentResponse, HttpStatusCode.OK);
+                return new GenericResponse<CommentResponse>(
+                    new CommentResponse(comment.Id, user.UserName, user.Avatar, text, rate, comment.PublishDate)
+                    );
             }
             catch
             {
-                return new GenericResponse<CommentResponse>("Internal server error.",
-                                                                  HttpStatusCode.InternalServerError);
+                return new GenericResponse<CommentResponse>("Internal server error.");
             }
         }
 
@@ -69,18 +53,17 @@ namespace FilmsAboutBack.Services
 
                 if(comment == null)
                 {
-                    return new GenericResponse<int>("Comment not found.", HttpStatusCode.NotFound);
+                    return new GenericResponse<int>("Comment not found.");
                 }
 
                 await _unitOfWork.CommentRepository.RemoveAsync(comment);
                 await _unitOfWork.SaveAsync();
 
-                return new GenericResponse<int>(id, HttpStatusCode.OK);
+                return new GenericResponse<int>(id);
             }
             catch
             {
-                return new GenericResponse<int>("Internal server error.",
-                                                                 HttpStatusCode.InternalServerError);
+                return new GenericResponse<int>("Internal server error.");
             }
         }
 
@@ -102,22 +85,15 @@ namespace FilmsAboutBack.Services
                               PublishDate = comment.PublishDate,
                               Rating = rating.Rate,
                           })
-                    .Join(users, tbl => tbl.UserId, user => user.Id,
-                          (tbl, user) => new CommentResponse()
-                          {
-                              Id = tbl.CommentId,
-                              Avatar = user.Avatar,
-                              UserName = user.UserName,
-                              Rating = tbl.Rating,
-                              Text = tbl.Text,
-                              PublishDate = tbl.PublishDate,
-                          }).ToList();
-                return new GenericResponse<IEnumerable<CommentResponse>>(commentsJoinRatings, HttpStatusCode.OK);
+                    .Join(users, cnr => cnr.UserId, user => user.Id,
+                          (cnr, user) => 
+                          new CommentResponse(cnr.CommentId, user.UserName, user.Avatar, cnr.Text, cnr.Rating, cnr.PublishDate))
+                    .ToList();
+                return new GenericResponse<IEnumerable<CommentResponse>>(commentsJoinRatings);
             }
             catch
             {
-                return new GenericResponse<IEnumerable<CommentResponse>>("Internal server error.",
-                                                                         HttpStatusCode.InternalServerError);
+                return new GenericResponse<IEnumerable<CommentResponse>>("Internal server error.");
             }
         }
     }

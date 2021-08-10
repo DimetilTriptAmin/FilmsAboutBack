@@ -11,5 +11,13 @@ namespace FilmsAboutBack.Models
         public int FilmId { get; set; }
         public string Text { get; set; }
         public DateTime PublishDate { get; set; }
+
+        public Comment(int userId, int filmId, string text, DateTime publishDate)
+        {
+            UserId = userId;
+            FilmId = filmId;
+            Text = text;
+            PublishDate = publishDate;
+        }
     }
 }

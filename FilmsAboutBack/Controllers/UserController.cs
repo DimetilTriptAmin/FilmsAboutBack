@@ -8,15 +8,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Net.Http;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Net;
 
 namespace FilmsAboutBack.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ControllerValidation]
     public class UserController : ControllerBase
     {
         private IUserService _userService;
@@ -54,33 +52,27 @@ namespace FilmsAboutBack.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequest loginData)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.Values.SelectMany(value => value.Errors.Select(error => error.ErrorMessage)));
-            }
-
             var response = await _userService.LoginUserAsync(loginData);
 
-            if (response.IsSucceeded) SetCookie(response.Value);
-
             if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
-            return Ok(response.Value);
+            else
+            {
+                SetCookie(response.Value);
+                return Ok(response.Value);
+            }
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest registerData)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.Values.SelectMany(value => value.Errors.Select(error => error.ErrorMessage)));
-            }
-
             var response = await _userService.RegisterUserAsync(registerData);
 
-            if (response.IsSucceeded) SetCookie(response.Value);
-
             if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
-            return Ok(response.Value);
+            else
+            {
+                SetCookie(response.Value);
+                return Ok(response.Value);
+            }
         }
 
         [HttpPut("refresh")]
@@ -93,10 +85,13 @@ namespace FilmsAboutBack.Controllers
 
             var response = await _userService.RefreshAsync(refreshToken);
 
-            if (response.IsSucceeded) SetCookie(response.Value);
 
             if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
-            return Ok(response.Value);
+            else
+            {
+                SetCookie(response.Value);
+                return Ok(response.Value);
+            }
         }
 
         [HttpDelete("logout")]

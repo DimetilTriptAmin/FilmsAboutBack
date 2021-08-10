@@ -1,7 +1,5 @@
-﻿using FilmsAboutBack.Models;
-using FilmsAboutBack.Services.Interfaces;
+﻿using FilmsAboutBack.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Controllers
@@ -28,9 +26,6 @@ namespace FilmsAboutBack.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFilmAsync(int id)
         {
-
-            if(!ModelState.IsValid) return BadRequest("Invalid input.");
-
             var response = await _filmService.GetFilmAsync(id);
             if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
             return Ok(response.Value);
