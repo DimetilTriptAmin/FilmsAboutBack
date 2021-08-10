@@ -1,6 +1,7 @@
 using FilmsAboutBack.DataAccess;
 using FilmsAboutBack.DataAccess.UnitOfWork;
 using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
+using FilmsAboutBack.Helpers;
 using FilmsAboutBack.Models;
 using FilmsAboutBack.Services;
 using FilmsAboutBack.Services.Interfaces;
@@ -20,12 +21,13 @@ namespace FilmsAboutBack
 {
     public class Startup
     {
+        private IConfiguration _configuration;
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -37,14 +39,14 @@ namespace FilmsAboutBack
             });
 
             services.AddDbContext<ApplicationContext>(options => 
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"))
                 );
 
-            services.AddAuthentication("OAuth").AddJwtBearer("OAuth", config =>
+            services.AddAuthentication("Bearer").AddJwtBearer("Bearer", config =>
             {
-                var issuer = Configuration.GetValue<string>("Jwt:Issuer");
-                var audience = Configuration.GetValue<string>("Jwt:Audience");
-                var secretKey = Configuration.GetValue<string>("Jwt:Secret");
+                var issuer = _configuration.GetValue<string>("Jwt:Issuer");
+                var audience = _configuration.GetValue<string>("Jwt:Audience");
+                var secretKey = _configuration.GetValue<string>("Jwt:AccessSecret");
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
@@ -74,19 +76,22 @@ namespace FilmsAboutBack
                 .AddEntityFrameworkStores<ApplicationContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddTransient<DbContext, ApplicationContext>();
+            services.AddScoped<DbContext, ApplicationContext>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IFilmService, FilmService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IRatingService, RatingService>();
+            services.AddSingleton<TokenDecoder>();
             services.AddSingleton<JwtGenerator>();
+            services.AddSingleton<RefreshTokenValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            // app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(options => options.WithOrigins(@"http://localhost:3000").AllowAnyHeader().AllowCredentials().AllowAnyMethod());
 
             if (env.IsDevelopment())
             {

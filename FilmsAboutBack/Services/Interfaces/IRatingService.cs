@@ -1,14 +1,12 @@
-﻿using FilmsAboutBack.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using FilmsAboutBack.DataAccess.DTO.Respones;
+using FilmsAboutBack.Helpers;
 using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services.Interfaces
 {
-    public interface IRatingService : ICRUDService<Rating>
+    public interface IRatingService
     {
-        Task<int> GetByPairIdAsync(int userId, int filmId);
-        Task<double> GetRatingByIdAsync(int filmId);
+        Task<GenericResponse<RatingResponse>> GetUserRatingAsync(int userId, int filmId);
+        Task<GenericResponse<bool>> SetRatingAsync(int rate, int filmId, int userId);
     }
 }

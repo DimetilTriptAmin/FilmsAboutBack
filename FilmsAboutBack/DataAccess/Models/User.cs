@@ -9,6 +9,8 @@ namespace FilmsAboutBack.Models
     {
         [Column(TypeName = "varchar(max)")]
         public byte[] Avatar { get; set; }
-        public DateTime BirthDate { get; set; }
+        public DateTime BirthDate { get; set; } // delete
+        [Column(TypeName = "varchar(max)")]
+        public string refreshToken { get; set; }
     }
 }

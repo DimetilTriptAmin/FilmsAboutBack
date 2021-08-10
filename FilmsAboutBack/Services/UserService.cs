@@ -1,76 +1,183 @@
 ﻿using FilmsAboutBack.DataAccess.DTO.Requests;
 using FilmsAboutBack.DataAccess.DTO.Respones;
 using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
+using FilmsAboutBack.Helpers;
 using FilmsAboutBack.Models;
 using FilmsAboutBack.Services.Interfaces;
 using FilmsAboutBack.TokenGenerators;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using System.Net;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace FilmsAboutBack.Services
 {
-    public class UserService : CRUDService<User>, IUserService
+    public class UserService : ServiceBase, IUserService
     {
         private readonly UserManager<User> _userManager;
-        private readonly IConfiguration _configuration;
         private readonly JwtGenerator _generator;
 
-        public UserService(IUnitOfWork unitOfWork, UserManager<User> userManager, IConfiguration configuration, JwtGenerator generator) : base(unitOfWork, unitOfWork.UserRepository)
+        public UserService(
+            IUnitOfWork unitOfWork, 
+            UserManager<User> userManager,
+            JwtGenerator generator
+            ) : base(unitOfWork)
         {
             _userManager = userManager;
-            _configuration = configuration;
             _generator = generator;
         }
 
-        public string HashPassword(User user, string password) => _userManager.PasswordHasher.HashPassword(user, password);
-
-        public async Task<LoginResponse> LoginUser(LoginRequest loginRequest)
+        public async Task<GenericResponse<UserResponse>> GetUserAsync(int id)
         {
-            var user = await _userManager.FindByNameAsync(loginRequest.Username);
-
-            if(user == null)
+            try
             {
-                throw new ArgumentException("No such username.");
-            }
+                var user = await _unitOfWork.UserRepository.GetAsync(id);
 
-            var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
-            
-            if (!isPasswordCorrect)
+                if (user == null)
+                {
+                    return new GenericResponse<UserResponse>("User not found.", HttpStatusCode.NotFound);
+                }
+
+                UserResponse userResponse = new UserResponse()
+                { Avatar = user.Avatar, Email = user.Email, UserName = user.UserName };
+
+                return new GenericResponse<UserResponse>(userResponse, HttpStatusCode.OK);
+            }
+            catch
             {
-                throw new ArgumentException("Password does not match.");
+                return new GenericResponse<UserResponse>("Server is offline.", HttpStatusCode.InternalServerError);
             }
-
-            var accessToken = _generator.GenerateAccessToken(user);
-            var refreshToken = _generator.GenerateRefreshToken();
-
-            return new LoginResponse(accessToken, refreshToken);
         }
 
-        public async Task<LoginResponse> RegisterUser(RegisterRequest registerRequest)
+        public async Task<GenericResponse<LoginResponse>> LoginUserAsync(LoginRequest loginRequest)
         {
-            var user = await _userManager.FindByNameAsync(registerRequest.Username);
-            if (user != null) throw new ArgumentException("This username is taken.");
-
-            user = await _userManager.FindByEmailAsync(registerRequest.Email);
-            if (user != null) throw new ArgumentException("This email is registered.");
-
-            if (registerRequest.Password!=registerRequest.ConfirmPassword) throw new ArgumentException("Passwords must be equal.");
-
-            user = new User()
+            try
             {
-                UserName = registerRequest.Username,
-                Email = registerRequest.Email,
-            };
-            var result = await _userManager.CreateAsync(user, registerRequest.Password);
+                var user = await _userManager.FindByNameAsync(loginRequest.Username);
 
-            if (!result.Succeeded)
-            {
-                throw new Exception(string.Join(",",result.Errors.Select(e=>e.Description)));
+                if (user == null)
+                {
+                    return new GenericResponse<LoginResponse>("No such username.", HttpStatusCode.BadRequest);
+                }
+
+                var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
+
+                if (!isPasswordCorrect)
+                {
+                    return new GenericResponse<LoginResponse>("Password does not match.", HttpStatusCode.BadRequest);
+                }
+
+                LoginResponse response = AuthorizeUser(user);
+                
+                user.refreshToken = response.RefreshToken;
+                await _userManager.UpdateAsync(user);
+
+                return new GenericResponse<LoginResponse>(response, HttpStatusCode.OK);
             }
+            catch
+            {
+                return new GenericResponse<LoginResponse>("Server is offline.", HttpStatusCode.InternalServerError);
+            }
+        }
 
+        public async Task<GenericResponse<bool>> LogoutAsync(int id)
+        {
+            try
+            {
+                User user = await _unitOfWork.UserRepository.GetAsync(id);
+
+                if (user == null)
+                {
+                    return new GenericResponse<bool>("Invalid token.", HttpStatusCode.BadRequest);
+                }
+
+                user.refreshToken = "";
+                await _unitOfWork.UserRepository.UpdateAsync(user);
+                await _unitOfWork.SaveAsync();
+                return new GenericResponse<bool>(true, HttpStatusCode.BadRequest); ;
+            }
+            catch
+            {
+                return new GenericResponse<bool>("Server is offline.", HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public async Task<GenericResponse<LoginResponse>> RefreshAsync(string token)
+        {
+            try
+            {
+                var request = await _unitOfWork.UserRepository.Filter(user => user.refreshToken == token);
+
+                var user = request.FirstOrDefault();
+
+                if (user == null)
+                {
+                    return new GenericResponse<LoginResponse>("Invalid token.", HttpStatusCode.BadRequest);
+                }
+
+                LoginResponse response = AuthorizeUser(user);
+                user.refreshToken = response.RefreshToken;
+                await _unitOfWork.UserRepository.UpdateAsync(user);
+                await _unitOfWork.SaveAsync();
+                return new GenericResponse<LoginResponse>(response, HttpStatusCode.OK);
+            }
+            catch
+            {
+                return new GenericResponse<LoginResponse>("Server is offline.", HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public async Task<GenericResponse<LoginResponse>> RegisterUserAsync(RegisterRequest registerRequest)
+        {
+            try
+            {
+                var user = await _userManager.FindByNameAsync(registerRequest.Username);
+                if (user != null)
+                {
+                    return new GenericResponse<LoginResponse>("This username is taken.", HttpStatusCode.BadRequest);
+                }
+
+                user = await _userManager.FindByEmailAsync(registerRequest.Email);
+                if (user != null)
+                {
+                    return new GenericResponse<LoginResponse>("This email is registered.", HttpStatusCode.BadRequest);
+
+                }
+
+                if (registerRequest.Password != registerRequest.ConfirmPassword)
+                {
+                    return new GenericResponse<LoginResponse>("Passwords must be equal.", HttpStatusCode.BadRequest);
+                }
+
+                user = new User()
+                {
+                    UserName = registerRequest.Username,
+                    Email = registerRequest.Email,
+                };
+
+                var result = await _userManager.CreateAsync(user, registerRequest.Password);
+                LoginResponse response = AuthorizeUser(user);
+                user.refreshToken = response.RefreshToken;
+                await _userManager.UpdateAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    return new GenericResponse<LoginResponse>(string.Join(",", result.Errors.Select(e => e.Description)),
+                        HttpStatusCode.BadRequest);
+                }
+
+                return new GenericResponse<LoginResponse>(response, HttpStatusCode.OK);
+            }
+            catch
+            {
+                return new GenericResponse<LoginResponse>("Server is offline.", HttpStatusCode.InternalServerError);
+            }
+        }
+
+        private LoginResponse AuthorizeUser(User user)
+        {
             var accessToken = _generator.GenerateAccessToken(user);
             var refreshToken = _generator.GenerateRefreshToken();
 

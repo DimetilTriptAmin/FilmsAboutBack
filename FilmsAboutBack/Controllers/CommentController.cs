@@ -1,25 +1,33 @@
-﻿using FilmsAboutBack.Models;
-using FilmsAboutBack.Services.Interfaces;
+﻿using FilmsAboutBack.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class CommentController : CRUDController<Comment>
+    public class CommentController : ControllerBase
     {
         private ICommentService _commentService;
 
-        public CommentController(ICommentService commentService) : base(commentService)
+        public CommentController(ICommentService commentService)
         {
             _commentService = commentService;
         }
 
-        [HttpGet("forFilm{id}")]
-        public async Task<IEnumerable<Comment>> GetAllByFilmIdAsync(int id)
+        [HttpGet("getAll{filmId}")]
+        public async Task<IActionResult> GetAllByFilmIdAsync(int filmId)
         {
-            return await _commentService.GetAllByFilmIdAsync(id);
+            try
+            {
+                var response = await _commentService.GetAllByFilmIdAsync(filmId);
+                return Ok(response);
+            }
+            catch(Exception error)
+            {
+                return BadRequest(error);
+            }
         }
 
     }

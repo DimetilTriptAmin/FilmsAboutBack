@@ -1,13 +1,11 @@
-﻿using FilmsAboutBack.Models;
-using System;
+﻿using FilmsAboutBack.DataAccess.DTO.Respones;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services.Interfaces
 {
-    public interface ICommentService : ICRUDService<Comment>
+    public interface ICommentService
     {
-        Task<IEnumerable<Comment>> GetAllByFilmIdAsync(int id);
+        Task<IEnumerable<CommentResponse>> GetAllByFilmIdAsync(int id);
     }
 }
