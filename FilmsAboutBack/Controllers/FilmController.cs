@@ -1,13 +1,13 @@
-﻿using FilmsAboutBack.Models;
+﻿using FilmsAboutBack.Helpers;
 using FilmsAboutBack.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ControllerValidation]
     public class FilmController : ControllerBase
     {
         private IFilmService _filmService;
@@ -18,20 +18,19 @@ namespace FilmsAboutBack.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Film>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
-            return await _filmService.GetAllAsync();
+            var response = await _filmService.GetAllAsync();
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFilmAsync(int id)
         {
-
-            if(!ModelState.IsValid) return BadRequest("Invalid input.");
-
             var response = await _filmService.GetFilmAsync(id);
-            if (response == null) return BadRequest("No such film.");
-            return Ok(response);
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
         }
 
     }
