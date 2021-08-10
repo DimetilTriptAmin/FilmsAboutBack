@@ -37,17 +37,17 @@ namespace FilmsAboutBack.Services
 
                 if (user == null)
                 {
-                    return new GenericResponse<UserResponse>("User not found.", HttpStatusCode.NotFound);
+                    return new GenericResponse<UserResponse>("User not found.");
                 }
 
                 UserResponse userResponse = new UserResponse()
                 { Avatar = user.Avatar, Email = user.Email, UserName = user.UserName };
 
-                return new GenericResponse<UserResponse>(userResponse, HttpStatusCode.OK);
+                return new GenericResponse<UserResponse>(userResponse);
             }
             catch
             {
-                return new GenericResponse<UserResponse>("Server is offline.", HttpStatusCode.InternalServerError);
+                return new GenericResponse<UserResponse>("Server is offline.");
             }
         }
 
@@ -59,14 +59,14 @@ namespace FilmsAboutBack.Services
 
                 if (user == null)
                 {
-                    return new GenericResponse<LoginResponse>("No such username.", HttpStatusCode.BadRequest);
+                    return new GenericResponse<LoginResponse>("No such username.");
                 }
 
                 var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
 
                 if (!isPasswordCorrect)
                 {
-                    return new GenericResponse<LoginResponse>("Password does not match.", HttpStatusCode.BadRequest);
+                    return new GenericResponse<LoginResponse>("Password does not match.");
                 }
 
                 LoginResponse response = AuthorizeUser(user);
@@ -74,11 +74,11 @@ namespace FilmsAboutBack.Services
                 user.refreshToken = response.RefreshToken;
                 await _userManager.UpdateAsync(user);
 
-                return new GenericResponse<LoginResponse>(response, HttpStatusCode.OK);
+                return new GenericResponse<LoginResponse>(response);
             }
             catch
             {
-                return new GenericResponse<LoginResponse>("Server is offline.", HttpStatusCode.InternalServerError);
+                return new GenericResponse<LoginResponse>("Server is offline.");
             }
         }
 
@@ -90,17 +90,17 @@ namespace FilmsAboutBack.Services
 
                 if (user == null)
                 {
-                    return new GenericResponse<bool>("Invalid token.", HttpStatusCode.BadRequest);
+                    return new GenericResponse<bool>("Invalid token.");
                 }
 
                 user.refreshToken = "";
                 await _unitOfWork.UserRepository.UpdateAsync(user);
                 await _unitOfWork.SaveAsync();
-                return new GenericResponse<bool>(true, HttpStatusCode.OK);
+                return new GenericResponse<bool>(true);
             }
             catch
             {
-                return new GenericResponse<bool>("Server is offline.", HttpStatusCode.InternalServerError);
+                return new GenericResponse<bool>("Server is offline.");
             }
         }
 
@@ -114,18 +114,18 @@ namespace FilmsAboutBack.Services
 
                 if (user == null)
                 {
-                    return new GenericResponse<LoginResponse>("Invalid token.", HttpStatusCode.BadRequest);
+                    return new GenericResponse<LoginResponse>("Invalid token.");
                 }
 
                 LoginResponse response = AuthorizeUser(user);
                 user.refreshToken = response.RefreshToken;
                 await _unitOfWork.UserRepository.UpdateAsync(user);
                 await _unitOfWork.SaveAsync();
-                return new GenericResponse<LoginResponse>(response, HttpStatusCode.OK);
+                return new GenericResponse<LoginResponse>(response);
             }
             catch
             {
-                return new GenericResponse<LoginResponse>("Server is offline.", HttpStatusCode.InternalServerError);
+                return new GenericResponse<LoginResponse>("Server is offline.");
             }
         }
 
@@ -136,19 +136,19 @@ namespace FilmsAboutBack.Services
                 var user = await _userManager.FindByNameAsync(registerRequest.Username);
                 if (user != null)
                 {
-                    return new GenericResponse<LoginResponse>("This username is taken.", HttpStatusCode.BadRequest);
+                    return new GenericResponse<LoginResponse>("This username is taken.");
                 }
 
                 user = await _userManager.FindByEmailAsync(registerRequest.Email);
                 if (user != null)
                 {
-                    return new GenericResponse<LoginResponse>("This email is registered.", HttpStatusCode.BadRequest);
+                    return new GenericResponse<LoginResponse>("This email is registered.");
 
                 }
 
                 if (registerRequest.Password != registerRequest.ConfirmPassword)
                 {
-                    return new GenericResponse<LoginResponse>("Passwords must be equal.", HttpStatusCode.BadRequest);
+                    return new GenericResponse<LoginResponse>("Passwords must be equal.");
                 }
 
                 user = new User()
@@ -164,15 +164,14 @@ namespace FilmsAboutBack.Services
 
                 if (!result.Succeeded)
                 {
-                    return new GenericResponse<LoginResponse>(string.Join(",", result.Errors.Select(e => e.Description)),
-                        HttpStatusCode.BadRequest);
+                    return new GenericResponse<LoginResponse>(string.Join(",", result.Errors.Select(e => e.Description)));
                 }
 
-                return new GenericResponse<LoginResponse>(response, HttpStatusCode.OK);
+                return new GenericResponse<LoginResponse>(response);
             }
             catch
             {
-                return new GenericResponse<LoginResponse>("Server is offline.", HttpStatusCode.InternalServerError);
+                return new GenericResponse<LoginResponse>("Server is offline.");
             }
         }
 

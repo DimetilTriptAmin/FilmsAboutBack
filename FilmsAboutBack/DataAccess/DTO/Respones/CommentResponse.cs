@@ -1,7 +1,4 @@
-﻿using FilmsAboutBack.Models;
-using System;
-using System.Text;
-using System.Text.Json.Serialization;
+﻿using System;
 
 namespace FilmsAboutBack.DataAccess.DTO.Respones
 {
@@ -12,5 +9,15 @@ namespace FilmsAboutBack.DataAccess.DTO.Respones
         public string Text { get; set; }
         public DateTime PublishDate { get; set; }
         public int Rating { get; set; }
+
+        public CommentResponse(string userName, byte[] avatar, string text, int rating, DateTime publishDate)
+        {
+            UserName = userName;
+            Avatar = avatar;
+            Text = text;
+            Rating = rating;
+            PublishDate = publishDate;
+        }
+
     }
 }

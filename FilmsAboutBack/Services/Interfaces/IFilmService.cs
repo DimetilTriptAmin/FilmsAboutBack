@@ -1,14 +1,13 @@
-﻿using FilmsAboutBack.Models;
-using System;
+﻿using FilmsAboutBack.DataAccess.DTO.Respones;
+using FilmsAboutBack.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services.Interfaces
 {
     public interface IFilmService
     {
-        Task<IEnumerable<Film>> GetAllAsync();
-        Task<Film> GetFilmAsync(int id);
+        Task<GenericResponse<IEnumerable<Film>>> GetAllAsync();
+        Task<GenericResponse<Film>> GetFilmAsync(int id);
     }
 }

@@ -6,6 +6,6 @@ namespace FilmsAboutBack.Services.Interfaces
 {
     public interface ICommentService
     {
-        Task<IEnumerable<CommentResponse>> GetAllByFilmIdAsync(int id);
+        Task<GenericResponse<IEnumerable<CommentResponse>>> GetAllByFilmIdAsync(int id);
     }
 }

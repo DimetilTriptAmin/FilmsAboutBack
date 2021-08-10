@@ -13,30 +13,32 @@ namespace FilmsAboutBack.Services
         {
         }
 
-        public async Task<IEnumerable<CommentResponse>> GetAllByFilmIdAsync(int id)
+        public async Task<GenericResponse<IEnumerable<CommentResponse>>> GetAllByFilmIdAsync(int id)
         {
-            var comments = await _unitOfWork.CommentRepository.Filter(c => c.FilmId == id);
-            var ratings = await _unitOfWork.RatingRepository.Filter(r => r.FilmId == id);
-            var users = await _unitOfWork.UserRepository.GetAllAsync();
+            try
+            {
+                var comments = await _unitOfWork.CommentRepository.Filter(c => c.FilmId == id);
+                var ratings = await _unitOfWork.RatingRepository.Filter(r => r.FilmId == id);
+                var users = await _unitOfWork.UserRepository.GetAllAsync();
 
-            var commentsJoinRatings = comments
-                .Join(ratings, comment => comment.UserId, rating => rating.UserId,
-                      (comment, rating) => new {
-                          UserId = comment.UserId,
-                          Text = comment.Text,
-                          PublishDate = comment.PublishDate,
-                          Rating = rating.Rate,
-                      })
-                .Join(users, tbl => tbl.UserId, user => user.Id,
-                      (tbl, user) => new CommentResponse()
-                      {
-                          Avatar = user.Avatar,
-                          UserName = user.UserName,
-                          Rating = tbl.Rating,
-                          Text = tbl.Text,
-                          PublishDate = tbl.PublishDate,
-                      }).ToList();
-            return commentsJoinRatings;
+                var commentsJoinRatingsJoinUsers = comments
+                    .Join(ratings, comment => comment.UserId, rating => rating.UserId,
+                          (comment, rating) => new
+                          {
+                              UserId = comment.UserId,
+                              Text = comment.Text,
+                              PublishDate = comment.PublishDate,
+                              Rating = rating.Rate,
+                          })
+                    .Join(users, rnc => rnc.UserId, user => user.Id,
+                          (rnc, user) => new CommentResponse(user.UserName, user.Avatar, rnc.Text, rnc.Rating, rnc.PublishDate))
+                    .ToList();
+                return new GenericResponse<IEnumerable<CommentResponse>>(commentsJoinRatingsJoinUsers);
+            }
+            catch
+            {
+                return new GenericResponse<IEnumerable<CommentResponse>>("$3rv3r 1s d3ad.");
+            }
         }
     }
 }

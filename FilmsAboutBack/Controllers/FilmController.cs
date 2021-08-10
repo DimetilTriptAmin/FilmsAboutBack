@@ -18,9 +18,11 @@ namespace FilmsAboutBack.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Film>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
-            return await _filmService.GetAllAsync();
+            var response = await _filmService.GetAllAsync();
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
         }
 
         [HttpGet("{id}")]
@@ -30,8 +32,8 @@ namespace FilmsAboutBack.Controllers
             if(!ModelState.IsValid) return BadRequest("Invalid input.");
 
             var response = await _filmService.GetFilmAsync(id);
-            if (response == null) return BadRequest("No such film.");
-            return Ok(response);
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
         }
 
     }

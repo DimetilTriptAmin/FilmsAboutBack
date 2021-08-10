@@ -1,10 +1,9 @@
 ﻿using FilmsAboutBack.DataAccess.DTO.Respones;
 using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
-using FilmsAboutBack.Helpers;
 using FilmsAboutBack.Models;
 using FilmsAboutBack.Services.Interfaces;
-using System.Net;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services
@@ -23,11 +22,11 @@ namespace FilmsAboutBack.Services
                 var rating = request.FirstOrDefault();
 
                 var response = new RatingResponse() { Rate = rating == null ? 0 : rating.Rate, UserId = userId };
-                return new GenericResponse<RatingResponse>(response, HttpStatusCode.OK);
+                return new GenericResponse<RatingResponse>(response);
             }
             catch
             {
-                return new GenericResponse<RatingResponse>("Internal server error.", HttpStatusCode.InternalServerError);
+                return new GenericResponse<RatingResponse>("Internal server error.");
             }
         }
 
@@ -56,11 +55,11 @@ namespace FilmsAboutBack.Services
                 film.Rating = await GetRatingAsync(filmId);
                 await _unitOfWork.SaveAsync();
 
-                return new GenericResponse<bool>(true, HttpStatusCode.OK);
+                return new GenericResponse<bool>(true);
             }
             catch
             {
-                return new GenericResponse<bool>("Internal server error.", HttpStatusCode.InternalServerError);
+                return new GenericResponse<bool>("Internal server error.");
             }
         }
 

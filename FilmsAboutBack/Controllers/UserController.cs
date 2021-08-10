@@ -47,12 +47,8 @@ namespace FilmsAboutBack.Controllers
 
             var response = await _userService.GetUserAsync(userId);
 
-            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
-            {
-                StatusCode = (int?)response.StatusCode
-            };
-
-            return objectResult;
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
         }
 
         [HttpPost("login")]
@@ -67,12 +63,8 @@ namespace FilmsAboutBack.Controllers
 
             if (response.IsSucceeded) SetCookie(response.Value);
 
-            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
-            {
-                StatusCode = (int?)response.StatusCode
-            };
-
-            return objectResult;
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
         }
 
         [HttpPost("register")]
@@ -87,12 +79,8 @@ namespace FilmsAboutBack.Controllers
 
             if (response.IsSucceeded) SetCookie(response.Value);
 
-            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
-            {
-                StatusCode = (int?)response.StatusCode
-            };
-
-            return objectResult;
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
         }
 
         [HttpPut("refresh")]
@@ -107,12 +95,8 @@ namespace FilmsAboutBack.Controllers
 
             if (response.IsSucceeded) SetCookie(response.Value);
 
-            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
-            {
-                StatusCode = (int?)response.StatusCode
-            };
-
-            return objectResult;
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
         }
 
         [HttpDelete("logout")]
@@ -127,12 +111,8 @@ namespace FilmsAboutBack.Controllers
 
             SetCookie(new LoginResponse("", ""));
 
-            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
-            {
-                StatusCode = (int?)response.StatusCode
-            };
-
-            return objectResult;
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
         }
 
         private void SetCookie(LoginResponse response)

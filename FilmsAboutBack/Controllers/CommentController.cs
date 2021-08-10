@@ -19,15 +19,9 @@ namespace FilmsAboutBack.Controllers
         [HttpGet("getAll{filmId}")]
         public async Task<IActionResult> GetAllByFilmIdAsync(int filmId)
         {
-            try
-            {
-                var response = await _commentService.GetAllByFilmIdAsync(filmId);
-                return Ok(response);
-            }
-            catch(Exception error)
-            {
-                return BadRequest(error);
-            }
+            var response = await _commentService.GetAllByFilmIdAsync(filmId);
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
         }
 
     }

@@ -42,12 +42,8 @@ namespace FilmsAboutBack.Controllers
 
             var response = await _ratingService.GetUserRatingAsync(userId, filmId);
 
-            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
-            {
-                StatusCode = (int?)response.StatusCode
-            };
-
-            return objectResult;
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -65,12 +61,8 @@ namespace FilmsAboutBack.Controllers
 
             var response = await _ratingService.SetRatingAsync(setRatingRequest.Rate, setRatingRequest.FilmId, userId);
 
-            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
-            {
-                StatusCode = (int?)response.StatusCode
-            };
-
-            return objectResult;
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
         }
 
     }
