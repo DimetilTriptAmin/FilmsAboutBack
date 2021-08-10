@@ -1,4 +1,5 @@
-﻿using FilmsAboutBack.Services.Interfaces;
+﻿using FilmsAboutBack.Helpers;
+using FilmsAboutBack.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -6,6 +7,7 @@ namespace FilmsAboutBack.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ControllerValidation]
     public class FilmController : ControllerBase
     {
         private IFilmService _filmService;
