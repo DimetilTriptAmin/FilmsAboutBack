@@ -53,16 +53,14 @@ namespace FilmsAboutBack.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateRequest updateData)
         {
-            var response = await _userService.UpdateAsync(loginData);
+            var token = Request.Headers["Authorization"].ToString().Split()[Constants.TOKEN_VALUE_INDEX];
 
-            if (response.IsSucceeded) SetCookie(response.Value);
+            int userId = _tokenDecoder.getUserIdFromToken(token);
 
-            ObjectResult objectResult = new ObjectResult(response.IsSucceeded ? response.Value : response.ErrorMessage)
-            {
-                StatusCode = (int?)response.StatusCode
-            };
+            var response = await _userService.UpdateAsync(userId, updateData);
 
-            return objectResult;
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
         }
 
         [HttpPost("login")]

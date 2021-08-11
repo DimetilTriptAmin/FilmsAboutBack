@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using System.Text;
 
 namespace FilmsAboutBack.Services
 {
@@ -52,27 +53,30 @@ namespace FilmsAboutBack.Services
             }
         }
 
-        //public async Task<GenericResponse<UpdateResponse>> UpdateAsync(UpdateRequest updateRequest)
-        //{
-        //    try
-        //    {
-        //        var user = await _unitOfWork.UserRepository.GetAsync(id);
+        public async Task<GenericResponse<UpdateResponse>> UpdateAsync(int userId, UpdateRequest updateRequest)
+        {
+            try
+            {
+                var user = await _unitOfWork.UserRepository.GetAsync(userId);
 
-        //        if (user == null)
-        //        {
-        //            return new GenericResponse<UserResponse>("User not found.", HttpStatusCode.NotFound);
-        //        }
+                if (user == null)
+                {
+                    return new GenericResponse<UpdateResponse>("User not found.");
+                }
 
-        //        UserResponse userResponse = new UserResponse()
-        //        { Avatar = user.Avatar, Email = user.Email, UserName = user.UserName };
+                user.Avatar = updateRequest.Avatar;
+                await _unitOfWork.SaveAsync();
 
-        //        return new GenericResponse<UserResponse>(userResponse, HttpStatusCode.OK);
-        //    }
-        //    catch
-        //    {
-        //        return new GenericResponse<UserResponse>("Server is offline.", HttpStatusCode.InternalServerError);
-        //    }
-        //}
+                UpdateResponse updateResponse = new UpdateResponse()
+                { Avatar = user.Avatar };
+
+                return new GenericResponse<UpdateResponse>(updateResponse);
+            }
+            catch
+            {
+                return new GenericResponse<UpdateResponse>("Server is offline.");
+            }
+        }
 
         public async Task<GenericResponse<LoginResponse>> LoginUserAsync(LoginRequest loginRequest)
         {
