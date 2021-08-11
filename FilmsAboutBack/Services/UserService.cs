@@ -203,6 +203,34 @@ namespace FilmsAboutBack.Services
             }
         }
 
+        public async Task<GenericResponse<bool>> ChangePasswordAsync(int id, ChangePasswordRequest changePasswordRequest)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(id.ToString());
+
+                if (user == null)
+                {
+                    return new GenericResponse<bool>("Bad request.");
+                }
+
+                var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, changePasswordRequest.OldPassword);
+
+                if (!isPasswordCorrect)
+                {
+                    return new GenericResponse<bool>("Password incorrect..");
+                }
+
+                user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, changePasswordRequest.NewPassword);
+                await _userManager.UpdateAsync(user);
+                return new GenericResponse<bool>(true);
+            }
+            catch
+            {
+                return new GenericResponse<bool>("Server is offline.");
+            }
+        }
+
         private LoginResponse AuthorizeUser(User user)
         {
             var accessToken = _generator.GenerateAccessToken(user);
@@ -210,5 +238,6 @@ namespace FilmsAboutBack.Services
 
             return new LoginResponse(accessToken, refreshToken);
         }
+
     }
 }
