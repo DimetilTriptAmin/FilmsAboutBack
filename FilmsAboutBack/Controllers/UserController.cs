@@ -49,6 +49,20 @@ namespace FilmsAboutBack.Controllers
             return Ok(response.Value);
         }
 
+        [HttpPut("update")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> UpdateAsync([FromBody] UpdateRequest updateData)
+        {
+            var token = Request.Headers["Authorization"].ToString().Split()[Constants.TOKEN_VALUE_INDEX];
+
+            int userId = _tokenDecoder.getUserIdFromToken(token);
+
+            var response = await _userService.UpdateAsync(userId, updateData);
+
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequest loginData)
         {

@@ -8,6 +8,7 @@ namespace FilmsAboutBack.Services.Interfaces
     public interface IUserService
     {
         public Task<GenericResponse<LoginResponse>> LoginUserAsync(LoginRequest loginRequest);
+        public Task<GenericResponse<UpdateResponse>> UpdateAsync(int userId, UpdateRequest updateRequest);
         public Task<GenericResponse<LoginResponse>> RegisterUserAsync(RegisterRequest registerRequest);
         public Task<GenericResponse<LoginResponse>> RefreshAsync(string token);
         public Task<GenericResponse<bool>> LogoutAsync(int id);
