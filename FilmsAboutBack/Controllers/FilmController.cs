@@ -33,5 +33,13 @@ namespace FilmsAboutBack.Controllers
             return Ok(response.Value);
         }
 
+        [HttpGet("getId/{title}")]
+        public async Task<IActionResult> GetFilmIdAsync(string title)
+        {
+            var response = await _filmService.GetFilmIdAsync(title);
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
+        }
+
     }
 }
