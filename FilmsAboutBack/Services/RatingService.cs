@@ -2,6 +2,7 @@
 using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
 using FilmsAboutBack.Models;
 using FilmsAboutBack.Services.Interfaces;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace FilmsAboutBack.Services
             }
         }
 
-        public async Task<GenericResponse<bool>> SetRatingAsync(int rate, int filmId, int userId)
+        public async Task<GenericResponse<double>> SetRatingAsync(int rate, int filmId, int userId)
         {
             try
             {
@@ -55,11 +56,11 @@ namespace FilmsAboutBack.Services
                 film.Rating = await GetRatingAsync(filmId);
                 await _unitOfWork.SaveAsync();
 
-                return new GenericResponse<bool>(true);
+                return new GenericResponse<double>(film.Rating);
             }
             catch
             {
-                return new GenericResponse<bool>("Internal server error.");
+                return new GenericResponse<double>("Internal server error.");
             }
         }
 
@@ -67,7 +68,7 @@ namespace FilmsAboutBack.Services
         {
             var request = await _unitOfWork.RatingRepository.Filter(r => r.FilmId == filmId);
             var rates = request.Select(rating => rating.Rate);
-            return rates.Average(value => value);
+            return Math.Round(rates.Average(value => value),2);
         }
     }
 }

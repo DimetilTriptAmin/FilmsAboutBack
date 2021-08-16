@@ -7,6 +7,6 @@ namespace FilmsAboutBack.Services.Interfaces
     public interface IRatingService
     {
         Task<GenericResponse<RatingResponse>> GetUserRatingAsync(int userId, int filmId);
-        Task<GenericResponse<bool>> SetRatingAsync(int rate, int filmId, int userId);
+        Task<GenericResponse<double>> SetRatingAsync(int rate, int filmId, int userId);
     }
 }

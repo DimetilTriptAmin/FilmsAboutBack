@@ -75,21 +75,27 @@ namespace FilmsAboutBack.Services
                 var ratings = await _unitOfWork.RatingRepository.Filter(r => r.FilmId == id);
                 var users = await _unitOfWork.UserRepository.GetAllAsync();
 
-                var commentsJoinRatings = comments
-                    .Join(ratings, comment => comment.UserId, rating => rating.UserId,
-                          (comment, rating) => new
-                          {
-                              CommentId = comment.Id,
-                              UserId = comment.UserId,
-                              Text = comment.Text,
-                              PublishDate = comment.PublishDate,
-                              Rating = rating.Rate,
-                          })
+                var commentsJoinRatings = from comment in comments
+                                      join rating in ratings
+                                      on comment.UserId equals rating.UserId
+                                      into CommentList
+                                      from rating in CommentList.DefaultIfEmpty()
+                                      select new
+                                      {
+                                          CommentId = comment.Id,
+                                          UserId = comment.UserId,
+                                          Text = comment.Text,
+                                          PublishDate = comment.PublishDate,
+                                          Rating = rating == null ? 0 : rating.Rate,
+                                      };
+
+                var commentListJoinUsers = commentsJoinRatings
                     .Join(users, cnr => cnr.UserId, user => user.Id,
-                          (cnr, user) => 
+                          (cnr, user) =>
                           new CommentResponse(cnr.CommentId, user.UserName, user.Avatar, cnr.Text, cnr.Rating, cnr.PublishDate))
                     .ToList();
-                return new GenericResponse<IEnumerable<CommentResponse>>(commentsJoinRatings);
+
+                return new GenericResponse<IEnumerable<CommentResponse>>(commentListJoinUsers);
             }
             catch
             {

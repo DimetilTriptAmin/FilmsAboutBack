@@ -108,6 +108,20 @@ namespace FilmsAboutBack.Controllers
             }
         }
 
+        [HttpPut("changePassword")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest changePasswordRequest)
+        {
+            var token = Request.Headers["Authorization"].ToString().Split()[Constants.TOKEN_VALUE_INDEX];
+
+            int userId = _tokenDecoder.getUserIdFromToken(token);
+
+            var response = await _userService.ChangePasswordAsync(userId, changePasswordRequest);
+
+            if (!response.IsSucceeded) return BadRequest(response.ErrorMessage);
+            return Ok(response.Value);
+        }
+
         [HttpDelete("logout")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> LogoutAsync()

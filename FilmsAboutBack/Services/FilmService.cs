@@ -3,6 +3,7 @@ using FilmsAboutBack.DataAccess.UnitOfWork.Interfaces;
 using FilmsAboutBack.Models;
 using FilmsAboutBack.Services.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FilmsAboutBack.Services
@@ -51,5 +52,24 @@ namespace FilmsAboutBack.Services
             }
         }
 
+        public async Task<GenericResponse<int>> GetFilmIdAsync(string title)
+        {
+            try
+            {
+                var filmRequest = await _unitOfWork.FilmRepository.Filter(film => film.Title == title);
+                var response = filmRequest.FirstOrDefault();
+
+                if (response == null)
+                {
+                    return new GenericResponse<int>("Film not found.");
+                }
+
+                return new GenericResponse<int>(response.Id);
+            }
+            catch
+            {
+                return new GenericResponse<int>("Internal server error.");
+            }
+        }
     }
 }
